@@ -50,4 +50,6 @@ class PageController extends AbstractController {
 
         return $this->render('users.html.twig', ['users' => $users, 'role' => 'admin']);
     }
+
+	
 }

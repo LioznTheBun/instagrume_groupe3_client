@@ -23,11 +23,11 @@ class ConnexionController extends AbstractController {
     #[Route('/login', methods: ['POST'])]
     public function connexion(Request $request) {
 
-        $username = $request->request->get('username');
+        $email = $request->request->get('email');
         $password = $request->request->get('password');
 
-        if (!empty($username) && !empty($password)) {
-            $data = $this->jsonConverter->encodeToJson(['username' => $username, 'password' => $password]);
+        if (!empty($email) && !empty($password)) {
+            $data = $this->jsonConverter->encodeToJson(['email' => $email, 'password' => $password]);
             $response = $this->apiLinker->postData('/login', $data, null);
             $responseObject = json_decode($response);
 

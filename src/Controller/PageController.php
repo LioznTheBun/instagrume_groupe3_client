@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Service\ApiLinker;
-
+use phpDocumentor\Reflection\Types\Null_;
 
 class PageController extends AbstractController {
 
@@ -18,7 +18,7 @@ class PageController extends AbstractController {
 
     #[Route('/', methods: ['GET'])]
     public function displayConnexionPage() {
-        return $this->render('accueil.html.twig', []);
+        return $this->render('accueil.html.twig', ['page' => 'accueil', 'role' => 'null']);
     }
 
     #[Route('/accueil', methods: ['GET'], condition: "service('route_checker').checkUser(request)")]
@@ -37,7 +37,7 @@ class PageController extends AbstractController {
             $role = 'admin';
         }
 
-        return $this->render('accueil.html.twig', ['accueil' => $accueil, 'role' => $role]);
+        return $this->render('accueil.html.twig', ['accueil' => $accueil, 'role' => $role, 'page' => 'accueil']);
     }
 
     #[Route('/users', methods: ['GET'], condition: "service('route_checker').checkAdmin(request)")]

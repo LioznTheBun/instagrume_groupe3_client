@@ -24,6 +24,10 @@ class InscriptionController extends AbstractController
     #[Route('/inscription', methods: ['POST'])]
     public function inscription(Request $request)
     {
+        //TODO: Créer des sécurité sur si qq'un utilise le même pseudo/email
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+
         $email = $request->request->get('email');
         $pseudo = $request->request->get('pseudo');
         $password = $request->request->get('password');
@@ -31,17 +35,18 @@ class InscriptionController extends AbstractController
         if (!empty($email) && !empty($pseudo) && !empty($password)) {
             $data = $this->jsonConverter->encodeToJson([
                 'email' => $email,
+                'roles' => ["ROLE_USER"],
                 'pseudo' => $pseudo,
                 'password' => $password,
+                'avatar' => 'img',
+                'is_banned' => false,
+                
             ]);
 
-            $response = $this->apiLinker->postData('/inscription', $data, null);
+            $response = $this->apiLinker->postData('/inscription', $data, $token);
             $responseObject = json_decode($response);
 
-            $session = $request->getSession();
-            $session->set('token-session', $responseObject->token);
-
-            return $this->redirect('/connexion');
+            return $this->redirect('/login');
         }
 
         return $this->redirect('/inscription');

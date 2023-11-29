@@ -10,19 +10,16 @@
 {% endblock %}
 
 {% block body %}
-	<!--Mix les post obtenues-->
-	{% set randomPosts = posts|shuffle %}
 	<!--Bouche for qui n'affiche que 3 posts-->
-	{% for post in randomPosts|slice(0, 3) %}
+	{% for post in posts|slice(0, 3) %}
 		<article class="post">
-			<header>Posté par
-				{{ post.auteur.pseudo }}
-				.
-				{{post.date_publication|date('d/m/Y H:m')}}</header>
-			<!--TODO: vérifier comment sera entré l'image dans la bdd-->
-			<img class="" src="{{ post.image }}" alt=""/>
+			<header>Posté par {{ post.auteur.pseudo }}</header>
+			<!--TODO: vérifier comment sera entré l'image dans la bdd en base 64-->
+			<img class="" src="" alt=""/>
 			<section class="description">{{post.description}}</section>
-			<section class="ratio">{{post.rating_publication.like}} / {{post.rating_publication.dislike}}</section>
+			<section class="ratio">{{post.rating_publication.likes_count}} / {{post.rating_publication.dislikes_count}}</section>
+            <!--TODO: ajout d'affichage d'un commentaire en foreach (ecemple dans menu sushi)-->
+            <section class="commentaire"></section>
 			{% if 'role' == 'admin' %}
 				<section class="admin-tab">
                 

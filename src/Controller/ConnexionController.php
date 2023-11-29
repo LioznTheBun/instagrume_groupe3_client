@@ -34,9 +34,8 @@ class ConnexionController extends AbstractController {
             $session = $request->getSession();
             $session->set('token-session', $responseObject->token);
 
-            return $this->redirect('/accueil');
+            return $this->redirect('/');
         }
-
         return $this->redirect('/login');
     }
 

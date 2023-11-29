@@ -20,14 +20,26 @@ class PageController extends AbstractController
         $this->apiLinker = $apiLinker;
     }
 
-    #[Route('/login', methods: ['GET'])]
-    public function displayConnexionPage()
+    #[Route('/accueil', methods: ['GET'])]
+    public function displayAccueilPage()
     {
         return $this->render('accueil.html.twig', ['page' => 'accueil', 'role' => NULL]);
     }
 
+    #[Route('/login', methods: ['GET'])]
+    public function displayConnexionPage()
+    {
+        return $this->render('connexion.html.twig', ['page' => 'connexion', 'role' => NULL]);
+    }
+
+    #[Route('/inscription', methods: ['GET'])]
+    public function displayInscriptionPage()
+    {
+        return $this->render('inscription.html.twig', ['page' => 'inscription', 'role' => NULL]);
+    }
+
     #[Route('/', methods: ['GET'])]
-    public function displayaccueilPage(Request $request)
+    public function displayAccueilPageBis(Request $request)
     {
         $role = NULL;
         $session = $request->getSession();

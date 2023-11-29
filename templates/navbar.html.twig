@@ -42,7 +42,12 @@
 				{% endif %}
 				{% if role == NULL %}
 					<li class="nav-item">
-						<a class="nav-link d-flex align-items-center" href="/login">Connexion/Inscription</a>
+						<a class="nav-link d-flex align-items-center {{ page == 'utilisateurs' ? 'active' :'' }}" href="/login">Connexion</a>
+					</li>
+				{% endif %}
+				{% if role == NULL %}
+					<li class="nav-item">
+						<a class="nav-link d-flex align-items-center {{ page == 'inscription' ? 'active' :'' }}" href="/inscription">Inscription</a>
 					</li>
 				{% endif %}
 				{% if role != NULL %}

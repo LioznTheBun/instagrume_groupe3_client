@@ -1,11 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% block titre %}{{ parent() }} - Accueil{% endblock%}
+{% block titre %}
+	{{ parent() }}- Accueil
+{% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    <!--link rel="stylesheet" href="{{ asset('css/accueil.css') }}" type="text/css"-->
+	{{ parent() }}
+	<!--link rel="stylesheet" href="{{ asset('css/accueil.css') }}" type="text/css"-->
 {% endblock %}
 
 {% block body %}
+	<!--Mix les post obtenues-->
+	{% set randomPosts = posts|shuffle %}
+	<!--Bouche for qui n'affiche que 3 posts-->
+	{% for post in randomPosts|slice(0, 3) %}
+		<article class="post">
+			<header>Posté par
+				{{ post.auteur.pseudo }}
+				.
+				{{post.date_publication|date('d/m/Y H:m')}}</header>
+			<!--TODO: vérifier comment sera entré l'image dans la bdd-->
+			<img class="" src="{{ post.image }}" alt=""/>
+			<section class="description">{{post.description}}</section>
+			<section class="ratio">{{post.rating_publication.like}} / {{post.rating_publication.dislike}}</section>
+			{% if 'role' == 'admin' %}
+				<section class="admin-tab">
+                
+                </section>
+			{% endif %}
+		</article>
+	{% endfor %}
 {% endblock %}

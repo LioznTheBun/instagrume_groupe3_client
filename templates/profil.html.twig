@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} - Profil
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <!--link rel="stylesheet" href="{{ asset('css/profil.css') }}" type="text/css"-->
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>Profil de l'utilisateur</h1>
+
+            <div>
+                Email: {{ user.username }}
+            </div>
+            <div>
+            </div>
+    </div>
+{% endblock %}

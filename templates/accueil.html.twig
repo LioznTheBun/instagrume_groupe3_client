@@ -12,19 +12,53 @@
 {% block body %}
 	<!--Bouche for qui n'affiche que 3 posts-->
 	{% for post in posts|slice(0, 3) %}
-		<article class="post">
-			<header>Posté par {{ post.auteur.pseudo }}</header>
-			<!--TODO: vérifier comment sera entré l'image dans la bdd en base 64-->
-			<img class="" src="" alt=""/>
-			<section class="description">{{post.description}}</section>
-			<section class="ratio">{{post.rating_publication.likes_count}} / {{post.rating_publication.dislikes_count}}</section>
-            <!--TODO: ajout d'affichage d'un commentaire en foreach (ecemple dans menu sushi)-->
-            <section class="commentaire"></section>
-			{% if 'role' == 'admin' %}
-				<section class="admin-tab">
-                
-                </section>
-			{% endif %}
-		</article>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 mt-3">
+            <article class="post mb-3">
+                <header class="post-header">
+				 	<div class="avatar_pseudo_user"> {{ post.auteur.avatar }} {{ post.auteur.pseudo }} </div>
+                </header>
+				<div class="post-footer text-muted">
+                    {{ post.date_publication.timestamp | date('Y-m-d H:i:s') }}
+                </div>
+				<div class="post-body">
+                    <section class="description post-text">{{ post.description }}</section>
+                </div>
+                <!-- TODO: Vérifier comment sera entrée l'image dans la BDD en base 64 -->
+                <img class="post-img-top" src="{{ asset('images/photo-test1.png') }}" alt="">
+
+
+                <div class="post-footer">
+                    <section class="ratio">{{ post.rating_publication.likes_count }} / {{ post.rating_publication.dislikes_count }}</section>
+					<div>
+						<img class="" src="{{ asset('images/like.png') }}"></img> <img class="" src="{{ asset('images/dislike.png') }}"></img>
+					</div>
+                </div>
+                <div class="post-footer">
+                    <section class="commentaires">
+                        {% for commentaire in post.commentaires %}
+                        <div class="commentaire post">
+                            <div class="post-body">
+                                <p class="post-text">Pseudo du commentaire : {{ commentaire.auteur.pseudo }}</p>
+                                <p class="post-text">Contenu : {{ commentaire.contenu }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </section>
+                </div>
+                {% if 'role' == 'admin' %}
+                <div class="post-footer">
+                    <section class="admin-tab">
+                        <!-- Add your admin content here -->
+                    </section>
+                </div>
+                {% endif %}
+            </article>
+        </div>
+    </div>
+</div>
+
+
 	{% endfor %}
 {% endblock %}

@@ -7,8 +7,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Service\ApiLinker;
-use phpDocumentor\Reflection\Types\Null_;
-use Symfony\Component\Serializer\Encoder\JsonDecode;
 
 class PageController extends AbstractController
 {
@@ -36,6 +34,17 @@ class PageController extends AbstractController
     public function displayInscriptionPage()
     {
         return $this->render('inscription.html.twig', ['page' => 'inscription', 'role' => NULL]);
+    }
+
+    #[Route('/profil', methods: ['GET'])]
+    public function displayProfilPage(Request $request)
+    {
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+
+        $response = $this->apiLinker->getData('/myself', $token);
+        $user = json_decode($response);
+        return $this->render('profil.html.twig', ['user' => $user, 'page' => 'profil', 'role' => null]);
     }
 
     #[Route('/', methods: ['GET'])]

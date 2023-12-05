@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Service\JsonConverter;
 use App\Service\ApiLinker;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class InscriptionController extends AbstractController
 {
@@ -24,31 +25,26 @@ class InscriptionController extends AbstractController
     #[Route('/inscription', methods: ['POST'])]
     public function inscription(Request $request)
     {
-        //TODO: Créer des sécurité sur si qq'un utilise le même pseudo/email
+        $responseObject = "";
         $session = $request->getSession();
         $token = $session->get('token-session');
 
         $email = $request->request->get('email');
         $pseudo = $request->request->get('pseudo');
         $password = $request->request->get('password');
+        $avatar = "";//$request->request->get('avatar') ?
 
-        if (!empty($email) && !empty($pseudo) && !empty($password)) {
-            $data = $this->jsonConverter->encodeToJson([
-                'email' => $email,
-                'roles' => ["ROLE_USER"],
-                'pseudo' => $pseudo,
-                'password' => $password,
-                'avatar' => 'img',
-                'is_banned' => false,
-                
-            ]);
 
-            $response = $this->apiLinker->postData('/inscription', $data, $token);
-            $responseObject = json_decode($response);
+        $data = $this->jsonConverter->encodeToJson([
+            'email' => $email,
+            'pseudo' => $pseudo,
+            'password' => $password,
+            'avatar' => $avatar
+        ]);
 
-            return $this->redirect('/login');
-        }
+        $response = $this->apiLinker->postData('/inscription', $data, $token);
+        $responseObject = json_decode($response);
 
-        return $this->redirect('/inscription');
+        return $this->render('inscription.html.twig', ['response' => $responseObject, 'role' => NULL, 'page' => 'inscription']);
     }
 }

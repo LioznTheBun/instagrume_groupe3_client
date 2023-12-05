@@ -1,26 +1,18 @@
-<!-- Navbar -->
 <nav
 	class="navbar navbar-expand-lg navbar-dark bg-dark">
-	<!-- Container wrapper -->
 	<div
 		class="container">
-		<!-- Navbar brand -->
 		<a class="navbar-brand" href="#"><img id="Instagrume-logo" src="{{ asset('images/logo.svg') }}" alt="Instagrume logo" draggable="false" height="70"/><span>Instagrume</span></a>
 
-		<!-- Toggle button -->
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
-
-		<!-- Collapsible wrapper -->
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<!-- Left links -->
 			<ul class="navbar-nav">
 				<li class="nav-item">
-					<a class="nav-link active d-flex me-3 align-items-center" aria-current="page" href="/">Accueil</a>
+					<a class="nav-link d-flex me-3 align-items-center {{ page == 'accueil' ? 'active' :'' }}" aria-current="page" href="/">Accueil</a>
 				</li>
 			</ul>
-			<!-- Left links -->
 
 			<form class="d-flex align-items-center w-100 form-search">
 				<input type="search" class="form-control" placeholder="Pseudo à chercher" aria-label="Search"/>
@@ -42,10 +34,8 @@
 				{% endif %}
 				{% if role == NULL %}
 					<li class="nav-item">
-						<a class="nav-link d-flex align-items-center {{ page == 'utilisateurs' ? 'active' :'' }}" href="/login">Connexion</a>
+						<a class="nav-link d-flex align-items-center {{ page == 'connexion' ? 'active' :'' }}" href="/login">Connexion</a>
 					</li>
-				{% endif %}
-				{% if role == NULL %}
 					<li class="nav-item">
 						<a class="nav-link d-flex align-items-center {{ page == 'inscription' ? 'active' :'' }}" href="/inscription">Inscription</a>
 					</li>
@@ -57,8 +47,5 @@
 				{% endif %}
 			</ul>
 		</div>
-		<!-- Collapsible wrapper -->
 	</div>
-	<!-- Container wrapper -->
 </nav>
-<!-- Navbar -->

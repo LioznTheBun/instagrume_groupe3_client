@@ -1,6 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Inscription{% endblock %}
+{% block title %}{{ parent() }} - Inscription{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock%}
+
+{% block javascripts %}
+    {{ parent() }}  
+{% endblock %}
 
 {% block body %}
     <div class="container-form-inscription">
@@ -20,6 +28,7 @@
                     </div>
                     <button type='submit' class='btn btn-primary mt-4 w-100'>S'inscrire</button>
                 </form>
+                <p>{{response|default("")}}</p>
             </div>
         </div>
     </div>

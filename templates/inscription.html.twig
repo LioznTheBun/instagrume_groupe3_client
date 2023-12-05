@@ -4,6 +4,7 @@
 
 {% block stylesheets %}
 	{{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/connexion.css') }}" type="text/css">
 {% endblock%}
 
 {% block javascripts %}
@@ -16,7 +17,7 @@
             <div class="row">
                 <form method='POST' action='/inscription' class="col-lg-3 col-12 mx-auto form-inscription p-5 pt-4 mb-4">
                     <img src='{{ asset("images/logo.svg") }}' class='w-50 mx-auto d-block'>
-
+                    <p class="bg-danger">{{response|default("")}}</p>
                     <div class='form-group'>
                         <input type='email' class='form-control' id='email' name='email' placeholder='Adresse email' required>
                     </div>
@@ -26,9 +27,8 @@
                     <div class='form-group mt-3'>
                         <input type='password' class='form-control' id='password' name='password' placeholder='Mot de passe' required>
                     </div>
-                    <button type='submit' class='btn btn-primary mt-4 w-100'>S'inscrire</button>
+                    <button type='submit' class='btn btn-success mt-4 w-100'>S'inscrire</button>
                 </form>
-                <p>{{response|default("")}}</p>
             </div>
         </div>
     </div>

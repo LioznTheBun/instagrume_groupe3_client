@@ -4,6 +4,7 @@
 
 {% block stylesheets %}
 	{{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/connexion.css') }}" type="text/css">
 {% endblock%}
 
 {% block javascripts %}
@@ -16,7 +17,7 @@
             <div class="row">
                 <form method='POST' action='/login' class="col-lg-3 col-12 mx-auto form-connexion p-5 pt-4 mb-4">
                     <img src='{{ asset("images/logo.svg") }}' class='w-50 mx-auto d-block'>
-
+                    <p class="bg-danger">{{response|default("")}}</p>
                     <div class='form-group'>
                         <input type='text' class='form-control' id='email' name='email' placeholder='Email' required>
                     </div>

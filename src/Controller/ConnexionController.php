@@ -37,10 +37,17 @@ class ConnexionController extends AbstractController
 
             $session = $request->getSession();
             $session->set('token-session', $responseObject->token);
+            $jsonUser = $this->apiLinker->getData('/myself', $responseObject->token);
+            $user = json_decode($jsonUser);
+            $role = 'membre';
+            if (in_array('ROLE_ADMIN', $user->roles)) {
+                $role = 'admin';
+            }
+            $session->set('role', $role);
 
             return $this->redirect('/');
         }
-        return $this->render('connexion.html.twig', ['response' => $responseObject, 'role' => NULL, 'page' => 'connexion']);
+        return $this->render('connexion.html.twig', ['response' => $responseObject, 'page' => 'connexion']);
     }
 
     #[Route('/logout', methods: ['GET'])]

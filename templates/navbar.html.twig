@@ -1,3 +1,4 @@
+{{ role.it.is.not.designed|default(NULL) }}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 	<div class="container">
 		<a class="navbar-brand" href="#"><img id="Instagrume-logo" src="{{ asset('images/logo.svg') }}" alt="Instagrume logo" draggable="false" height="70"/><span>Instagrume</span>
@@ -18,17 +19,17 @@
 			</form>
 
 			<ul class="navbar-nav">
-				{% if role != NULL %}
+				{% if app.session.get('role') != NULL %}
 					<li class="nav-item">
 						<a class="nav-link d-flex align-items-center {{ page == 'profil' ? 'active' :'' }}" href="/profil">Profil</a>
 					</li>
 				{% endif %}
-				{% if role == 'admin' %}
+				{% if app.session.get('role') == 'admin' %}
 					<li class="nav-item">
-						<a class="nav-link d-flex align-items-center {{ page == 'utilisateurs' ? 'active' :'' }}" href="/users">Utilisateurs</a>
+						<a class="nav-link d-flex align-items-center {{ page == 'Modération' ? 'active' :'' }}" href="/users">Modération</a>
 					</li>
 				{% endif %}
-				{% if role == NULL %}
+				{% if app.session.get('role') == NULL %}
 					<li class="nav-item">
 						<a class="nav-link d-flex align-items-center {{ page == 'connexion' ? 'active' :'' }}" href="/login">Connexion</a>
 					</li>
@@ -36,7 +37,7 @@
 						<a class="nav-link d-flex align-items-center {{ page == 'inscription' ? 'active' :'' }}" href="/inscription">Inscription</a>
 					</li>
 				{% endif %}
-				{% if role != NULL %}
+				{% if app.session.get('role') != NULL %}
 					<li class="nav-item">
 						<a class="nav-link d-flex align-items-center" href="/logout">Déconnexion</a>
 					</li>

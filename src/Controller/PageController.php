@@ -18,16 +18,22 @@ class PageController extends AbstractController
         $this->apiLinker = $apiLinker;
     }
 
+    #[Route('/accueil', methods: ['GET'])]
+    public function displayAccueilPage()
+    {
+        return $this->render('accueil.html.twig', ['page' => 'accueil', 'role' => NULL]);
+    }
+
     #[Route('/login', methods: ['GET'])]
     public function displayConnexionPage()
     {
-        return $this->render('connexion.html.twig', ['page' => 'connexion']);
+        return $this->render('connexion.html.twig', ['page' => 'connexion', 'role' => NULL]);
     }
 
     #[Route('/inscription', methods: ['GET'])]
     public function displayInscriptionPage()
     {
-        return $this->render('inscription.html.twig', ['page' => 'inscription']);
+        return $this->render('inscription.html.twig', ['page' => 'inscription', 'role' => NULL]);
     }
 
     #[Route('/profil', methods: ['GET'])]
@@ -38,7 +44,7 @@ class PageController extends AbstractController
 
         $response = $this->apiLinker->getData('/myself', $token);
         $user = json_decode($response);
-        return $this->render('profil.html.twig', ['user' => $user, 'page' => 'profil']);
+        return $this->render('profil.html.twig', ['user' => $user, 'page' => 'profil', 'role' => null]);
     }
 
     #[Route('/', methods: ['GET'])]
@@ -62,9 +68,8 @@ class PageController extends AbstractController
 
         $arrayPosts = json_decode($posts);
         shuffle($arrayPosts);
-        $session->set('role', $role);
 
-        return $this->render('accueil.html.twig', ['page' => 'accueil', 'posts' => $arrayPosts]);
+        return $this->render('accueil.html.twig', ['role' => $role, 'page' => 'accueil', 'posts' => $arrayPosts]);
     }
 
     #[Route('/users', methods: ['GET'], condition: "service('route_checker').checkAdmin(request)")]
@@ -76,6 +81,6 @@ class PageController extends AbstractController
         $response = $this->apiLinker->getData('/users', $token);
         $users = json_decode($response);
 
-        return $this->render('users.html.twig', ['users' => $users]);
+        return $this->render('users.html.twig', ['users' => $users, 'role' => 'admin']);
     }
 }

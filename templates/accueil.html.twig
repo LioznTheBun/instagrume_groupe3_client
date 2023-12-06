@@ -14,57 +14,80 @@
 {% endblock %}
 
 {% block body %}
+		{% if app.session.get('role') != NULL %}
+		<button id="createPublicationBtn" class="button_add_post" onclick="showPopup()">
+			<img src="{{ asset('images/add_post.png') }}">
+		</button>
+		<div id="popup" class="popup">
+			<div class="popup-content">
+				<div class="close" onclick="closePopup()">Fermer</div>
+				<label for='inputDescription' class='form-label'></label>
+				<input id='inputDescription' class='form-control' type='text'>
+				<img id="uploadPreview" style="width: 300px; height: 280px;" />
+				<div class="bottom-section">
+					<div class="div_publier">
+						<button class="publier" id="publishButton" onclick="createPublication()">Publier</button>
+					</div>
+					<input id="uploadImage" type="file" name="myPhoto" onchange="PreviewImage();" />
+				</div>
+			</div>
+		</div>
+	{% endif %}
 	<!--Bouche for qui n'affiche que 3 posts-->
 	{% for post in posts|slice(0, 3) %}
 	<div class="container">
-
 		<div class="row justify-content-center">
 			<div class="col-md-8 mt-3">
 				<article class="post mb-3">
-				{% if role == 'membre' %}
-					<button id="createPublicationBtn" class="button_add_post" onclick="showPopup()"><img src="{{ asset('images/add_post.png') }}"></button></img>
-					<div id="popup" class="popup">
-						<div class="popup-content">
-							<div class="close" onclick="closePopup()">Fermer</div>
-							<div class="div_input_description"><input class="input_description_post" type="text" placeholder="À quoi pensez-vous ?"></input></div>
-							<img id="uploadPreview" style="width: 300px; height: 280px;" />
-							<div class="bottom-section">
-								<div class="div_publier"><button class="publier">Publier</button></div>
-								<input id="uploadImage" type="file" name="myPhoto" onchange="PreviewImage();" />
-							</div>
-						</div>
-					</div>
-				{% endif %}
 					<header class="post-header">
-						<div class="avatar_pseudo_user"> {{ post.auteur.avatar }} {{ post.auteur.pseudo }} </div>
+						<!--<div class="avatar_pseudo_user"> {{ post.auteur.avatar }} {{ post.auteur.pseudo }} </div> -->
+						<a href="/profil"><img class="avatar_user" src="{{ asset('images/photo-test1.png') }}" alt=""></a>
+						<p class="pseudo_user">{{ post.auteur.pseudo }}</p>
+						<p class="date_post">● {{ post.date_publication.timestamp | date('Y-m-d H:i:s') }}</p>
 					</header>
-					<div class="post-footer text-muted">
-						{{ post.date_publication.timestamp | date('Y-m-d H:i:s') }}
-					</div>
-					<div class="post-body">
-						<section class="description post-text">{{ post.description }}</section>
-					</div>
 					<!-- TODO: Vérifier comment sera entrée l'image dans la BDD en base 64 -->
 					<img class="post-img-top" src="{{ asset('images/photo-test1.png') }}" alt="">
-
-
 					<div class="post-footer">
-						<section class="ratio">{{ post.rating_publication.likes_count }} / {{ post.rating_publication.dislikes_count }}</section>
-						<div>
-							<img class="" src="{{ asset('images/like.png') }}"></img> <img class="" src="{{ asset('images/dislike.png') }}"></img>
+						<div class="likes_dislikes_section">
+								<img class="" src="{{ asset('images/like.png') }}"></img>
+								{{ post.rating_publication.likes_count }}
+								<img class="" src="{{ asset('images/dislike.png') }}"></img>
+								{{ post.rating_publication.dislikes_count }}
 						</div>
-					</div>
-					<div class="post-footer">
-						<section class="commentaires">
-							{% for commentaire in post.commentaires %}
-							<div class="commentaire post">
-								<div class="post-body">
-									<p class="post-text">Pseudo du commentaire : {{ commentaire.auteur.pseudo }}</p>
-									<p class="post-text">Contenu : {{ commentaire.contenu }}</p>
+						<div class="post-body">
+							<section class="description post-text">{{ post.description }}</section>
+						</div>
+						<button class="buttonShowPost" onclick="showPublication()"><p class="more_infos">Afficher tous les commentaires...</p></button>
+						{% for commentaire in post.commentaires | slice(0, 1) %}
+								<div class="commentaire post">
+									<div class="post-body">
+										<p class="post-text">{{ commentaire.auteur.pseudo }}</p>
+										<p class="post-text">{{ commentaire.contenu }}</p>
+									</div>
 								</div>
+						{% endfor %}
+					</div>
+					<div id="popupPublication" class="popupPublication">
+						<div class="popup-content-publication">
+							<div class="close" onclick="closePopupPublication()">Fermer</div>
+							<div class="left-content-popup">
+								<img class="post-img-top" src="{{ asset('images/photo-test1.png') }}" alt="">
 							</div>
-							{% endfor %}
+							<div class="right-content-popup">
+								<div class="avatar_pseudo_user"> {{ post.auteur.avatar }} {{ post.auteur.pseudo }} </div>
+								<p>{{ post.description }}</p>
+								<section class="commentaires">
+								{% for commentaire in post.commentaires %}
+								<div class="commentaire post">
+									<div class="post-body">
+										<p class="post-text">{{ commentaire.auteur.pseudo }}</p>
+										<p class="post-text">{{ commentaire.contenu }}</p>
+									</div>
+								</div>
+								{% endfor %}
+							</div>
 						</section>
+						</div>
 					</div>
 					{% if 'role' == 'admin' %}
 					<div class="post-footer">

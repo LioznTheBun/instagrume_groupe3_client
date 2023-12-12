@@ -52,6 +52,17 @@ function createPublication() {
     });
 }
 
+function togglePublishButton() {
+    var textareaValue = document.getElementById('commentTextarea').value;
+    var publishButton = document.getElementById('publishButton');
+
+    if (textareaValue.trim() !== '') {
+        publishButton.style.display = 'block';
+    } else {
+        publishButton.style.display = 'none';
+    }
+}
+
 
 
 

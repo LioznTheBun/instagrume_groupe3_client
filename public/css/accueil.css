@@ -142,3 +142,32 @@
 .date_post {
     font-weight: lighter;
 }
+
+.buttonAddPost {
+    border: none;
+    width: 100%;
+}
+
+#publishButton {
+    display: none;
+}
+
+.avatar_pseudo_user_popup {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.pseudo_comment_popup {
+    font-weight: bold;
+}
+
+.pseudo_user_popup {
+    font-weight: bold;
+}
+
+.post_body_popup {
+    display: flex;
+    gap: 10px;
+}

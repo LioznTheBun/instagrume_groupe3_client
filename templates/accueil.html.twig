@@ -66,6 +66,10 @@
 									</div>
 								</div>
 						{% endfor %}
+						<div class="postComment">
+							<textarea class="buttonAddPost" id="commentTextarea" placeholder="Ajouter un commentaire..." oninput="togglePublishButton()"></textarea>
+							<button id="publishButton" onclick="">Publier</button>
+						</div>
 					</div>
 					<div id="popupPublication" class="popupPublication">
 						<div class="popup-content-publication">
@@ -74,17 +78,30 @@
 								<img class="post-img-top" src="{{ asset('images/photo-test1.png') }}" alt="">
 							</div>
 							<div class="right-content-popup">
-								<div class="avatar_pseudo_user"> {{ post.auteur.avatar }} {{ post.auteur.pseudo }} </div>
-								<p>{{ post.description }}</p>
+								<div class="avatar_pseudo_user_popup">
+									<a href="/profil"><img class="avatar_user" src="{{ asset('images/photo-test1.png') }}" alt=""></a>
+									<div class="pseudo_user_popup"> {{ post.auteur.pseudo }} </div>
+								</div>
+								<div class="content_post_popup">
+									<p>{{ post.description }}</p>
+								</div>
+								<div class="date_post_popup">
+									<p class="date_post">Publié le {{ post.date_publication.timestamp | date('Y-m-d H:i:s') }}</p>
+								</div>
 								<section class="commentaires">
 								{% for commentaire in post.commentaires %}
 								<div class="commentaire post">
-									<div class="post-body">
-										<p class="post-text">{{ commentaire.auteur.pseudo }}</p>
-										<p class="post-text">{{ commentaire.contenu }}</p>
+									<div class="post_body_popup">
+										<p class="pseudo_comment_popup">{{ commentaire.auteur.pseudo }}</p>
+										<p class="comment_popup">{{ commentaire.contenu }}</p>
 									</div>
 								</div>
 								{% endfor %}
+								<div class="postComment">
+									<textarea class="buttonAddPost" id="commentTextarea" placeholder="Ajouter un commentaire..." oninput="togglePublishButton()"></textarea>
+									<button id="publishButtonPopup" onclick="">Publier</button>
+								</div>
+						</div>
 							</div>
 						</section>
 						</div>

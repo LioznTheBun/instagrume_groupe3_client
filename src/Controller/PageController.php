@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Service\ApiLinker;
+use OpenApi\Annotations\Response;
 
 class PageController extends AbstractController
 {
@@ -18,22 +19,16 @@ class PageController extends AbstractController
         $this->apiLinker = $apiLinker;
     }
 
-    #[Route('/accueil', methods: ['GET'])]
-    public function displayAccueilPage()
-    {
-        return $this->render('accueil.html.twig', ['page' => 'accueil', 'role' => NULL]);
-    }
-
     #[Route('/login', methods: ['GET'])]
     public function displayConnexionPage()
     {
-        return $this->render('connexion.html.twig', ['page' => 'connexion', 'role' => NULL]);
+        return $this->render('connexion.html.twig', ['page' => 'connexion']);
     }
 
     #[Route('/inscription', methods: ['GET'])]
     public function displayInscriptionPage()
     {
-        return $this->render('inscription.html.twig', ['page' => 'inscription', 'role' => NULL]);
+        return $this->render('inscription.html.twig', ['page' => 'inscription']);
     }
 
     #[Route('/profil', methods: ['GET'])]
@@ -44,7 +39,7 @@ class PageController extends AbstractController
 
         $response = $this->apiLinker->getData('/myself', $token);
         $user = json_decode($response);
-        return $this->render('profil.html.twig', ['user' => $user, 'page' => 'profil', 'role' => null]);
+        return $this->render('profil.html.twig', ['user' => $user, 'page' => 'profil']);
     }
 
     #[Route('/', methods: ['GET'])]
@@ -68,8 +63,9 @@ class PageController extends AbstractController
 
         $arrayPosts = json_decode($posts);
         shuffle($arrayPosts);
+        $session->set('role', $role);
 
-        return $this->render('accueil.html.twig', ['role' => $role, 'page' => 'accueil', 'posts' => $arrayPosts]);
+        return $this->render('accueil.html.twig', ['page' => 'accueil', 'posts' => $arrayPosts]);
     }
 
     #[Route('/users', methods: ['GET'], condition: "service('route_checker').checkAdmin(request)")]
@@ -81,6 +77,26 @@ class PageController extends AbstractController
         $response = $this->apiLinker->getData('/users', $token);
         $users = json_decode($response);
 
-        return $this->render('users.html.twig', ['users' => $users, 'role' => 'admin']);
+        return $this->render('users.html.twig', ['page' => 'Modération' ,'users' => $users]);
+    }
+
+    #[Route('/ban/{userId}', methods: ['PUT'])]
+    public function banUser($userId, Request $request)
+    {
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+        $response = $this->apiLinker->putData('/ban' . $userId , NULL, $token);
+
+        return new Response(json_decode($response));
+    }
+
+    #[Route('/unban/{userId}', methods: ['PUT'])]
+    public function unbanUser($userId, Request $request)
+    {
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+        $response = $this->apiLinker->putData('/unban' . $userId , NULL, $token);
+
+        return new Response(json_decode($response));
     }
 }

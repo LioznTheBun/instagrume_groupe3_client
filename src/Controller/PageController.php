@@ -42,6 +42,18 @@ class PageController extends AbstractController
         return $this->render('profil.html.twig', ['user' => $user, 'page' => 'profil']);
     }
 
+    #[Route('/publications/{id}', methods: ['GET'], name: 'display_publication_by_id')]
+    public function displayPublicationsByIdPage($id, Request $request)
+    {
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+
+        $publicationDetails = $this->apiLinker->getData('/publications/' . $id, $token);
+        $publication = json_decode($publicationDetails);
+
+        return new Response($publication);
+    }
+
     #[Route('/', methods: ['GET'])]
     public function displayAccueilPageBis(Request $request)
     {
@@ -77,7 +89,7 @@ class PageController extends AbstractController
         $response = $this->apiLinker->getData('/users', $token);
         $users = json_decode($response);
 
-        return $this->render('users.html.twig', ['page' => 'Modération' ,'users' => $users]);
+        return $this->render('users.html.twig', ['page' => 'Modération', 'users' => $users]);
     }
 
     #[Route('/ban/{userId}', methods: ['PUT'])]
@@ -85,7 +97,7 @@ class PageController extends AbstractController
     {
         $session = $request->getSession();
         $token = $session->get('token-session');
-        $response = $this->apiLinker->putData('/ban' . $userId , NULL, $token);
+        $response = $this->apiLinker->putData('/ban' . $userId, NULL, $token);
 
         return new Response(json_decode($response));
     }
@@ -95,7 +107,7 @@ class PageController extends AbstractController
     {
         $session = $request->getSession();
         $token = $session->get('token-session');
-        $response = $this->apiLinker->putData('/unban' . $userId , NULL, $token);
+        $response = $this->apiLinker->putData('/unban' . $userId, NULL, $token);
 
         return new Response(json_decode($response));
     }

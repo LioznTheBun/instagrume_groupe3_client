@@ -10,114 +10,136 @@
 {% endblock %}
 {% block javascripts %}
 	{{ parent() }}
-	<script src="{{ asset('js/accueil.js') }}"></script> 
+	<script src="{{ asset('js/accueil.js') }}"></script>
 {% endblock %}
 
 {% block body %}
-		{% if app.session.get('role') != NULL %}
-		<button id="createPublicationBtn" class="button_add_post" onclick="showPopup()">
-			<img src="{{ asset('images/add_post.png') }}">
-		</button>
-		<div id="popup" class="popup">
-			<div class="popup-content">
-				<div class="close" onclick="closePopup()">Fermer</div>
-				<label for='inputDescription' class='form-label'></label>
-				<input id='inputDescription' class='form-control' type='text'>
-				<img id="uploadPreview" style="width: 300px; height: 280px;" />
-				<div class="bottom-section">
-					<div class="div_publier">
-						<button class="publier" id="publishButton" onclick="createPublication()">Publier</button>
-					</div>
-					<input id="uploadImage" type="file" name="myPhoto" onchange="PreviewImage();" />
+{% if app.session.get('role') != NULL %}
+	<button id="createPublicationBtn" class="button_add_post" onclick="showPopup()">
+		<img src="{{ asset('images/add_post.png') }}">
+	</button>
+	<div id="popup" class="popup">
+		<div class="popup-content">
+			<div class="close" onclick="closePopup()">Fermer</div>
+			<label for='inputDescription' class='form-label'></label>
+			<input id='inputDescription' class='form-control' type='text'>
+			<img id="uploadPreview" style="width: 300px; height: 280px;"/>
+			<div class="bottom-section">
+				<div class="div_publier">
+					<button class="publier" id="publishButtonCreationPost" onclick="createPublication()">Publier</button>
 				</div>
-			</div>
-		</div>
-	{% endif %}
-	<!--Bouche for qui n'affiche que 3 posts-->
-	{% for post in posts|slice(0, 3) %}
-	<div class="container">
-		<div class="row justify-content-center">
-			<div class="col-md-8 mt-3">
-				<article class="post mb-3">
-					<header class="post-header">
-						<!--<div class="avatar_pseudo_user"> {{ post.auteur.avatar }} {{ post.auteur.pseudo }} </div> -->
-						<a href="/profil"><img class="avatar_user" src="{{ asset('images/photo-test1.png') }}" alt=""></a>
-						<p class="pseudo_user">{{ post.auteur.pseudo }}</p>
-						<p class="date_post">● {{ post.date_publication.timestamp | date('Y-m-d H:i:s') }}</p>
-					</header>
-					<!-- TODO: Vérifier comment sera entrée l'image dans la BDD en base 64 -->
-					<img class="post-img-top" src="{{ asset('images/photo-test1.png') }}" alt="">
-					<div class="post-footer">
-						<div class="likes_dislikes_section">
-								<img class="" src="{{ asset('images/like.png') }}"></img>
-								{{ post.rating_publication.likes_count }}
-								<img class="" src="{{ asset('images/dislike.png') }}"></img>
-								{{ post.rating_publication.dislikes_count }}
-						</div>
-						<div class="post-body">
-							<section class="description post-text">{{ post.description }}</section>
-						</div>
-						<button class="buttonShowPost" onclick="showPublication()"><p class="more_infos">Afficher tous les commentaires...</p></button>
-						{% for commentaire in post.commentaires | slice(0, 1) %}
-								<div class="commentaire post">
-									<div class="post-body">
-										<p class="post-text">{{ commentaire.auteur.pseudo }}</p>
-										<p class="post-text">{{ commentaire.contenu }}</p>
-									</div>
-								</div>
-						{% endfor %}
-						<div class="postComment">
-							<textarea class="buttonAddPost" id="commentTextarea" placeholder="Ajouter un commentaire..." oninput="togglePublishButton()"></textarea>
-							<button id="publishButton" onclick="">Publier</button>
-						</div>
-					</div>
-					<div id="popupPublication" class="popupPublication">
-						<div class="popup-content-publication">
-							<div class="close" onclick="closePopupPublication()">Fermer</div>
-							<div class="left-content-popup">
-								<img class="post-img-top" src="{{ asset('images/photo-test1.png') }}" alt="">
-							</div>
-							<div class="right-content-popup">
-								<div class="avatar_pseudo_user_popup">
-									<a href="/profil"><img class="avatar_user" src="{{ asset('images/photo-test1.png') }}" alt=""></a>
-									<div class="pseudo_user_popup"> {{ post.auteur.pseudo }} </div>
-								</div>
-								<div class="content_post_popup">
-									<p>{{ post.description }}</p>
-								</div>
-								<div class="date_post_popup">
-									<p class="date_post">Publié le {{ post.date_publication.timestamp | date('Y-m-d H:i:s') }}</p>
-								</div>
-								<section class="commentaires">
-								{% for commentaire in post.commentaires %}
-								<div class="commentaire post">
-									<div class="post_body_popup">
-										<p class="pseudo_comment_popup">{{ commentaire.auteur.pseudo }}</p>
-										<p class="comment_popup">{{ commentaire.contenu }}</p>
-									</div>
-								</div>
-								{% endfor %}
-								<div class="postComment">
-									<textarea class="buttonAddPost" id="commentTextarea" placeholder="Ajouter un commentaire..." oninput="togglePublishButton()"></textarea>
-									<button id="publishButtonPopup" onclick="">Publier</button>
-								</div>
-						</div>
-							</div>
-						</section>
-						</div>
-					</div>
-					{% if 'role' == 'admin' %}
-					<div class="post-footer">
-						<section class="admin-tab">
-							<!-- Add your admin content here -->
-						</section>
-					</div>
-					{% endif %}
-				</article>
+				<input id="uploadImage" type="file" name="myPhoto" onchange="PreviewImage();"/>
 			</div>
 		</div>
 	</div>
-
-
-	{% endfor %}
-{% endblock %}
+{% endif %}
+<!--Bouche for qui n'affiche que 3 posts-->
+{% for post in posts|slice(0, 3) %}
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-md-8 mt-3">
+				<article class="post mb-3" data-post-id="{{ post.id }}">
+					<header
+						class="post-header">
+						<!--<div class="avatar_pseudo_user"> {{ post.auteur.avatar }} {{ post.auteur.pseudo }} </div> -->
+						<a href="/profil"><img class="avatar_user" src="{{ asset('images/photo-test1.png') }}" alt=""></a>
+						<p class="pseudo_user">{{ post.auteur.pseudo }}</p>
+						<p class="date_post">●
+							{{ post.date_publication.timestamp | date('Y-m-d H:i:s') }}</p>
+					</header>
+					<div class="post_img">
+						<img class="post-img-top" src="{{ asset('images/photo-test1.png') }}" alt="Image">
+					</div>
+					<div class="post-footer">
+						<div class="likes_dislikes_section">
+							<div class="likes_comment_post"><img class="" src="{{ asset('images/like.png') }}"></img>
+						</div>
+						<p>{{ post.rating_publication.likes_count }}</p>
+						<div class="dislikes_comment_post"><img class="" src="{{ asset('images/dislike.png') }}"></img>
+					</div>
+					<p>{{ post.rating_publication.dislikes_count }}</p>
+				</div>
+				<div class="post-body">
+					<section class="description post-text">{{ post.description }}</section>
+				</div>
+				<button class="buttonShowPost" onclick="showPublication('{{ post.id }}')">
+					<p class="more_infos">Afficher tous les commentaires...</p>
+				</button>
+				{% for commentaire in post.commentaires | slice(0, 1) %}
+					<div class="commentaire post">
+						<div class="post-body">
+							<p class="post_text_pseudo">{{ commentaire.auteur.pseudo }}</p>
+							<div class="post_content">
+								<p class="post_text_content">{{ commentaire.contenu }}</p>
+								<div class="like_dislike_post">
+									{% if commentaire.rating_commentaire is not null %}
+										<div class="comment_like_post"><img class="" src="{{ asset('images/like.png') }}"></img>
+									</div>
+									<p>{{ commentaire.rating_commentaire.likes_count }}</p>
+									<div class="comment_dislike_post"><img class="" src="{{ asset('images/dislike.png') }}"></img>
+								</div>
+								<p>{{ commentaire.rating_commentaire.dislikes_count }}</p>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+		<textarea class="buttonAddPost" id="commentTextareaAccueil" placeholder="Ajouter un commentaire..." oninput="togglePublishButton()"></textarea>
+		{% if app.session.get('role') == 'membre' %}
+			<button id="publishButtonAccueil" style="display:none;">Publier</button>
+		{% endif %}
+	</div>
+	<div id="popupPublication" class="popupPublication">
+		<div class="popup-content-publication">
+			<div class="close" onclick="closePopupPublication()">Fermer</div>
+			<div class="left-content-popup">
+				<img class="post-img-top" src="{{ asset('images/photo-test1.png') }}" alt="">
+			</div>
+			<div class="right-content-popup">
+				<div class="avatar_pseudo_user_popup">
+					<a href="/profil"><img class="avatar_user" src="{{ asset('images/photo-test1.png') }}" alt=""></a>
+					<div class="pseudo_user_popup">
+						{{ post.auteur.pseudo }}
+					</div>
+				</div>
+				<div class="content_post_popup">
+					<p>{{ post.description }}</p>
+				</div>
+				<div class="date_post_popup">
+					<p class="date_post">Publié le
+						{{ post.date_publication.timestamp | date('Y-m-d H:i:s') }}</p>
+				</div>
+				<section class="commentaires_popup">
+					{% for commentaire in post.commentaires %}
+						<div class="commentaire post">
+							<div class="post_body_popup">
+								<p class="pseudo_comment_popup">{{ commentaire.auteur.pseudo }}</p>
+								<p class="comment_popup">{{ commentaire.contenu }}</p>
+								<div class="like_dislike_popup">
+									{% if commentaire.rating_commentaire is not null %}
+										<div class="like_popup"><img class="img_like_popup" src="{{ asset('images/like.png') }}"></img>
+									</div>
+									<p>{{ commentaire.rating_commentaire.likes_count }}</p>
+									<div class="dislike_popup"><img class="img_dislike_popup" src="{{ asset('images/dislike.png') }}"></img>
+								</div>
+								<p>{{ commentaire.rating_commentaire.dislikes_count }}</p>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</section>
+		<div class="post_comment_popup">
+			<textarea class="buttonAddPost" id="commentTextarea" placeholder="Ajouter un commentaire..." oninput="togglePublishButton()"></textarea>
+			<button id="publishButtonPopup" onclick="">Publier</button>
+		</div>
+	</div>
+	{% if 'role' == 'admin' %}
+		<div class="post-footer">
+			<section
+				class="admin-tab"><!-- Add your admin content here -->
+			</section>
+		</div>
+	{% endif %}
+</article></div></div></div>{% endfor %}{% endblock %}

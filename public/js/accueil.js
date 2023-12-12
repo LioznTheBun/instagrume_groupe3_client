@@ -2,8 +2,23 @@ function showPopup() {
     document.getElementById('popup').style.display = 'block';
 }
 
-function showPublication() {
-    document.getElementById('popupPublication').style.display = 'block';
+function showPublication(postId) {
+    var popup = document.getElementById('popupPublication');
+
+    var ajaxRequest = new XMLHttpRequest();
+    ajaxRequest.addEventListener('readystatechange', function () {
+        if (ajaxRequest.readyState === 4) {
+            if (ajaxRequest.status === 200) {
+                var publicationDetails = JSON.parse(ajaxRequest.responseText);
+                document.getElementById('popup-content-publication').innerHTML = publicationDetails.description;
+                popup.style.display = 'block';
+            } else {
+                console.log('Status error: ' + ajaxRequest.status);
+            }
+        }
+    });
+    ajaxRequest.open('GET', '/publications/' + postId);
+    ajaxRequest.send();
 }
 
 function closePopupPublication() {
@@ -30,7 +45,7 @@ function PreviewImage() {
     };
 };
 function createPublication() {
-    var modalCreatePublication = document.getElementById('publishButton');
+    var modalCreatePublication = document.getElementById('publishButtonCreationPost');
     modalCreatePublication.addEventListener('click', function (event) {
         let dataToSend = new Object();
         dataToSend.description = document.getElementById('inputDescription').value;
@@ -53,13 +68,13 @@ function createPublication() {
 }
 
 function togglePublishButton() {
-    var textareaValue = document.getElementById('commentTextarea').value;
-    var publishButton = document.getElementById('publishButton');
+    var commentTextareaAccueil = document.getElementById('commentTextareaAccueil').value;
+    var publishButtonAccueil = document.getElementById('publishButtonAccueil');
 
-    if (textareaValue.trim() !== '') {
-        publishButton.style.display = 'block';
+    if (commentTextareaAccueil.trim() !== '') {
+        publishButtonAccueil.style.display = 'block';
     } else {
-        publishButton.style.display = 'none';
+        publishButtonAccueil.style.display = 'none';
     }
 }
 

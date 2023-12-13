@@ -36,13 +36,13 @@ class PageController extends AbstractController
     {
         $session = $request->getSession();
         $token = $session->get('token-session');
-
-        if ($this->isTokenExpired($token)) {
-            $session->remove('token-session');
-            $session->clear();
-            return $this->redirect('/login');
+        if ($session->get('isUserConnected')) {
+            if ($this->isTokenExpired($session->get('expiration'))) {
+                $session->remove('token-session');
+                $session->clear();
+                return $this->redirect('/login');
+            }
         }
-
         $response = $this->apiLinker->getData('/myself', $token);
         $user = json_decode($response);
         return $this->render('profil.html.twig', ['user' => $user, 'page' => 'profil']);
@@ -53,11 +53,12 @@ class PageController extends AbstractController
     {
         $session = $request->getSession();
         $token = $session->get('token-session');
-
-        if ($this->isTokenExpired($token)) {
-            $session->remove('token-session');
-            $session->clear();
-            return $this->redirect('/login');
+        if ($session->get('isUserConnected')) {
+            if ($this->isTokenExpired($session->get('expiration'))) {
+                $session->remove('token-session');
+                $session->clear();
+                return $this->redirect('/login');
+            }
         }
 
         $publicationDetails = $this->apiLinker->getData('/publications/' . $id, $token);
@@ -72,13 +73,13 @@ class PageController extends AbstractController
         $role = NULL;
         $session = $request->getSession();
         $token = $session->get('token-session');
-
-        if ($this->isTokenExpired($token)) {
-            $session->remove('token-session');
-            $session->clear();
-            return $this->redirect('/login');
+        if ($session->get('isUserConnected')) {
+            if ($this->isTokenExpired($session->get('expiration'))) {
+                $session->remove('token-session');
+                $session->clear();
+                return $this->redirect('/login');
+            }
         }
-
         $posts = $this->apiLinker->getData('/publications', $token);
 
         // récupération du rôle de l'utilisateur courant
@@ -103,11 +104,12 @@ class PageController extends AbstractController
     {
         $session = $request->getSession();
         $token = $session->get('token-session');
-
-        if ($this->isTokenExpired($token)) {
-            $session->remove('token-session');
-            $session->clear();
-            return $this->redirect('/login');
+        if ($session->get('isUserConnected')) {
+            if ($this->isTokenExpired($session->get('expiration'))) {
+                $session->remove('token-session');
+                $session->clear();
+                return $this->redirect('/login');
+            }
         }
 
         $response = $this->apiLinker->getData('/users', $token);
@@ -121,13 +123,13 @@ class PageController extends AbstractController
     {
         $session = $request->getSession();
         $token = $session->get('token-session');
-
-        if ($this->isTokenExpired($token)) {
-            $session->remove('token-session');
-            $session->clear();
-            return $this->redirect('/login');
+        if ($session->get('isUserConnected')) {
+            if ($this->isTokenExpired($session->get('expiration'))) {
+                $session->remove('token-session');
+                $session->clear();
+                return $this->redirect('/login');
+            }
         }
-
         $response = $this->apiLinker->updateData('/ban' . $userId, $token);
 
         return new Response(json_decode($response));
@@ -138,26 +140,20 @@ class PageController extends AbstractController
     {
         $session = $request->getSession();
         $token = $session->get('token-session');
-
-        if ($this->isTokenExpired($token)) {
-            $session->remove('token-session');
-            $session->clear();
-            return $this->redirect('/login');
+        if ($session->get('isUserConnected')) {
+            if ($this->isTokenExpired($session->get('expiration'))) {
+                $session->remove('token-session');
+                $session->clear();
+                return $this->redirect('/login');
+            }
         }
-        
         $response = $this->apiLinker->updateData('/unban' . $userId, $token);
 
         return new Response(json_decode($response));
     }
 
-    private function isTokenExpired($token)
+    private function isTokenExpired($expirationTime)
     {
-        if ($token == NULL){
-            return true;
-        } else {
-            $expirationTime = $token->getCredentials()->getExpiresAt();
-        }
-
         $currentTime = time();
 
         if ($expirationTime instanceof \DateTime && $expirationTime < $currentTime) {

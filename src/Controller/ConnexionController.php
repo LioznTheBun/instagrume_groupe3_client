@@ -32,7 +32,12 @@ class ConnexionController extends AbstractController
         $data = $this->jsonConverter->encodeToJson(['email' => $email, 'password' => $password]);
         $response = $this->apiLinker->postData('/login', $data, null);
         $responseObject = json_decode($response);
-
+        $tokenParts = explode('.', $response);
+        $encodedPayload = $tokenParts[1];
+        $decodedPayload = base64_decode($encodedPayload);
+        $payload = json_decode($decodedPayload, true);
+        $expirationDate = $payload['exp'];
+        
         if (!is_String($responseObject)) {
 
             $session = $request->getSession();
@@ -44,6 +49,8 @@ class ConnexionController extends AbstractController
                 $role = 'admin';
             }
             $session->set('role', $role);
+            $session->set('isUserConnected', true);
+            $session->set('expiration', $expirationDate);
 
             return $this->redirect('/');
         }
@@ -56,6 +63,7 @@ class ConnexionController extends AbstractController
         $session = $request->getSession();
         $session->remove('token-session');
         $session->clear();
+        $session->set('isUserConnected', false);
 
         return $this->redirect('/');
     }

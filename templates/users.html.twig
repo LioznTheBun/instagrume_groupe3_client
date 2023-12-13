@@ -11,11 +11,10 @@
 
 {% block javascripts %}
 	{{ parent() }}
+	<script src="{{ asset('js/ban.js') }}"></script> 
 {% endblock %}
 
 {% block body %}
-
-	{% include 'navigation.html.twig' with {'page': 'utilisateurs'} %}
 
 	<div class='container mt-3'>
 		<div class='tab-content border border-top-0 p-3 bg-white' id='content'>
@@ -31,14 +30,11 @@
 						<th scope='col'>
 							Role
 						</th>
-						<th scope='col'>
-							Nombre d'incidents
-						</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for user in users %}
-						<tr>
+						<tr id='tr-user-{{ user.id }}'>
 							<td class='align-middle' scope='row'>
 								{{ user.id }}
 							</td>
@@ -46,20 +42,67 @@
 								{{ user.pseudo }}
 							</td>
 							<td class='align-middle' scope='row'>
-								{% if 'admin' in user.roles %}
+								{% if 'ROLE_ADMIN' in user.roles %}
 									Administrateur
 								{% else %}
 									Membre
 								{% endif %}
 							</td>
-							<!--<td class='align-middle' scope='row'>
-								{{ user.incidents|length }}
-							</td>-->
+							<td>
+								{% if 'ROLE_ADMIN' not in user.roles %}
+									{% if user.is_banned %}
+										<button type='button' class='btn btn-success' data-bs-toggle='modal' data-bs-target='#deban' data-user-id='{{ user.id }}'>Deban
+											<i class='bi bi-trash'></i>
+										</button>
+										<div class="modal fade" id="deban" tabindex="-1" aria-labelledby="debanModalTitle" aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title" id="debanModalTitle">Deban</h5>
+														<button type="button" class="btn-close btn-success" data-bs-dismiss="modal" aria-label="Close"></button>
+													</div>
+
+													<div class="modal-body">
+														<input id="debanInputId" type="hidden">
+														<p>Etes-vous sûr de vouloir deban cet utilisateur ?</p>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+														<button type="button" class="btn btn-primary" id="validDeban">OK</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									{% else %}
+										<button type='button' class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#ban' data-user-id='{{ user.id }}'>Ban
+											<i class='bi bi-trash'></i>
+										</button>
+										<div class="modal fade" id="ban" tabindex="-1" aria-labelledby="banModalTitle" aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title" id="banModalTitle">Ban</h5>
+														<button type="button" class="btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+													</div>
+
+													<div class="modal-body">
+														<input id="banInputId" type="hidden">
+														<p>Etes-vous sûr de vouloir ban cet utilisateur ?</p>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+														<button type="button" class="btn btn-primary" id="validBan">OK</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									{% endif %}
+								{% endif %}
+							</td>
 						</tr>
 					{% endfor %}
 				</tbody>
 			</table>
 		</div>
 	</div>
-
 {% endblock %}

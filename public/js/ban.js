@@ -1,67 +1,59 @@
-var ajaxRequest = new XMLHttpRequest();
-ajaxRequest.open('GET', 'test.php');
-ajaxRequest.send();
-
-$(document).ready(function() {
-    $('.ban-button').on('click', function() {
-        var userId = $(this).data('user-id');
-
-        $.ajax({
-            url: '/ban/' + userId,
-            method: 'PUT',
-            success: function(response) {
-                // Handle success, update UI, etc.
-                console.log(response);
-            },
-            error: function(error) {
-                // Handle error
-                console.error(error);
+var modalBan = document.getElementById('ban');
+if (modalBan) {
+modalBan.addEventListener('show.bs.modal', function(event) {
+    var idUser = event.relatedTarget.getAttribute('data-user-id');
+    modalBan.querySelector('#banInputId').value  = idUser;
+});
+}
+modalBan.querySelector('#validBan').addEventListener('click', function(event) {
+    var idUser = modalBan.querySelector('#banInputId').value = idUser;
+    
+    let ajaxRequest = new XMLHttpRequest();
+    ajaxRequest.addEventListener ("readystatechange", function(){
+        if(ajaxRequest.readyState === 4){
+            if(ajaxRequest.status === 200){
+               
+                let modalBootstrap = bootstrap.Modal.getInstance(modalBan);
+                modalBootstrap.hide();
+                var message = JSON.parse(ajaxRequest.responseText);
+                console.log(message);
             }
-        });
+            else {
+                console.log("Status error: " + ajaxRequest.status);
+            }
+        }
     });
 
-    $('.unban-button').on('click', function() {
-        var userId = $(this).data('user-id');
-
-        $.ajax({
-            url: '/unban/' + userId,
-            method: 'PUT',
-            success: function(response) {
-                // Handle success, update UI, etc.
-                console.log(response);
-            },
-            error: function(error) {
-                // Handle error
-                console.error(error);
-            }
-        });
-    });
+    ajaxRequest.open('PUT', '/ban/' + idUser); 
+    ajaxRequest.send();
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-	
-	let champsDate = document.querySelectorAll(".birthdate-aventurier");
-	
-	for (let champDate of champsDate) {
-		
-		champDate.addEventListener ("change", function(event) {
-			let idAventurier = champDate.parentNode.id;
-			let ajaxRequest = new XMLHttpRequest();
-			
-			ajaxRequest.open('POST', "php_ajax/modify_birthdate.php");
-			ajaxRequest.onreadystatechange = function(){
-                if(ajaxRequest.readyState === 4){
-                    if(ajaxRequest.status === 200){
+var modalDeban = document.getElementById('deban');
+if (modalDeban) {
+modalDeban.addEventListener('show.bs.modal', function(event) {
+    var idUser = event.relatedTarget.getAttribute('data-user-id');
+    modalDeban.querySelector('#debanInputId').value  = idUser;
+});
+}
+modalDeban.querySelector('#validDeban').addEventListener('click', function(event) {
+    var idUser = modalDeban.querySelector('#debanInputId').value;
+    
+    let ajaxRequest = new XMLHttpRequest();
+    ajaxRequest.addEventListener ("readystatechange", function(){
+        if(ajaxRequest.readyState === 4){
+            if(ajaxRequest.status === 200){
+               
+                let modalBootstrap = bootstrap.Modal.getInstance(modalDeban);
+                modalBootstrap.hide();
+                var message = JSON.parse(ajaxRequest.responseText);
+                console.log(message);
+            }
+            else {
+                console.log("Status error: " + ajaxRequest.status);
+            }
+        }
+    });
 
-                        console.log(ajaxRequest.responseText);
-                    }
-                    else {
-                        console.log("Erreur");
-                    }
-                }
-            };
-			var data = {idAventurier: idAventurier, dateNaissance: champDate.value};
-			ajaxRequest.send(JSON.stringify(data));
-		});
-	}
+    ajaxRequest.open('PUT', '/unban/' + idUser); 
+    ajaxRequest.send();
 });

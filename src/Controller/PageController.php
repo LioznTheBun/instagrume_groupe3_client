@@ -97,7 +97,7 @@ class PageController extends AbstractController
     {
         $session = $request->getSession();
         $token = $session->get('token-session');
-        $response = $this->apiLinker->putData('/ban' . $userId, NULL, $token);
+        $response = $this->apiLinker->updateData('/ban' . $userId, $token);
 
         return new Response(json_decode($response));
     }
@@ -107,7 +107,7 @@ class PageController extends AbstractController
     {
         $session = $request->getSession();
         $token = $session->get('token-session');
-        $response = $this->apiLinker->putData('/unban' . $userId, NULL, $token);
+        $response = $this->apiLinker->updateData('/unban' . $userId, $token);
 
         return new Response(json_decode($response));
     }

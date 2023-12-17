@@ -48,7 +48,8 @@ class ApiLinker
 				'Authorization' => 'Bearer ' . $token
 			]
 		]);
-		$content = $response->getContent();
+		
+		$content = $response->getContent(false);
 
 		return $content;
 	}

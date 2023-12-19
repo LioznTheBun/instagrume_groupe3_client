@@ -21,14 +21,16 @@
 	<div id="popup" class="popup">
 		<div class="popup-content">
 			<div class="close" onclick="closePopup()">Fermer</div>
-			<label for='inputDescription' class='form-label'></label>
-			<input id='inputDescription' class='form-control' type='text'>
+			<label for='inputDescription' class='form-label'>
+				<input id='inputDescription' class='form-control' type='text'>
+			</label>
+
 			<img id="uploadPreview" style="width: 300px; height: 280px;"/>
 			<div class="bottom-section">
 				<div class="div_publier">
 					<button class="publier" id="publishButtonCreationPost" onclick="createPublication()">Publier</button>
 				</div>
-				<input id="uploadImage" type="file" name="myPhoto" onchange="PreviewImage();"/>
+				<input id="uploadImage" type="file" name="myPhoto"/>
 			</div>
 		</div>
 	</div>

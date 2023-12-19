@@ -7,7 +7,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Service\ApiLinker;
-use OpenApi\Annotations\Response;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class PageController extends AbstractController
 {
@@ -64,7 +65,9 @@ class PageController extends AbstractController
         $publicationDetails = $this->apiLinker->getData('/publications/' . $id, $token);
         $publication = json_decode($publicationDetails);
 
-        return new Response($publication);
+        $publicationString = json_encode($publication);
+
+        return new Response($publicationString);
     }
 
     #[Route('/', methods: ['GET'])]
@@ -87,7 +90,7 @@ class PageController extends AbstractController
             $jsonUser = $this->apiLinker->getData('/myself', $token);
             $user = json_decode($jsonUser);
             $role = 'membre';
-            if (!isset($user->roles)){
+            if (!isset($user->roles)) {
                 return $this->render('connexion.html.twig', ['response' => 'Votre session à expiré.', 'page' => 'connexion']);
             }
             if (in_array('ROLE_ADMIN', $user->roles)) {

@@ -10,7 +10,31 @@ function showPublication(postId) {
         if (ajaxRequest.readyState === 4) {
             if (ajaxRequest.status === 200) {
                 var publicationDetails = JSON.parse(ajaxRequest.responseText);
-                document.getElementById('popup-content-publication').innerHTML = publicationDetails.description;
+
+                document.querySelector('.post-img-top').src = "images/photo-test1.png";
+                document.querySelector('.avatar_user').src = "images/photo-test1.png";
+                document.querySelector('.pseudo_user_popup').innerHTML = publicationDetails.auteur.pseudo;
+                document.querySelector('.content_post_popup').innerHTML = '<p>' + publicationDetails.description + '</p>';
+                document.querySelector('.date_post_popup').innerHTML = '<p class="date_post">Publié le ' + publicationDetails.date_publication + '</p>';
+
+
+                var commentairesHtml = '';
+                for (var i = 0; i < publicationDetails.commentaires.length; i++) {
+                    var commentaire = publicationDetails.commentaires[i];
+                    commentairesHtml += '<div class="commentaire post">';
+                    commentairesHtml += '<div class="post_body_popup">';
+                    commentairesHtml += '<p class="pseudo_comment_popup">' + commentaire.auteur.pseudo + '</p>';
+                    commentairesHtml += '<p class="comment_popup">' + commentaire.contenu + '</p>';
+                    commentairesHtml += '<div class="like_dislike_popup">';
+                    if (commentaire.rating_commentaire !== null) {
+                        commentairesHtml += '<div class="like_popup"><img class="img_like_popup" src="images/like.png"></div>';
+                        commentairesHtml += '<p>' + commentaire.rating_commentaire.likes_count + '</p>';
+                        commentairesHtml += '<div class="dislike_popup"><img class="img_dislike_popup" src="images/dislike.png"></div>';
+                        commentairesHtml += '<p>' + commentaire.rating_commentaire.dislikes_count + '</p>';
+                    }
+                    commentairesHtml += '</div></div></div>';
+                }
+                document.querySelector('.commentaires_popup').innerHTML = commentairesHtml;
                 popup.style.display = 'block';
             } else {
                 console.log('Status error: ' + ajaxRequest.status);
@@ -43,28 +67,29 @@ function PreviewImage() {
     oFReader.onload = function (oFREvent) {
         document.getElementById("uploadPreview").src = oFREvent.target.result;
     };
-};
+}
+
 function createPublication() {
-    var modalCreatePublication = document.getElementById('publishButtonCreationPost');
-    modalCreatePublication.addEventListener('click', function (event) {
-        let dataToSend = new Object();
-        dataToSend.description = document.getElementById('inputDescription').value;
+    let description = document.getElementById('inputDescription').value;
+    let imageFile = document.getElementById('uploadImage').files[0];
 
-        let ajaxRequest = new XMLHttpRequest();
-        ajaxRequest.addEventListener('readystatechange', function () {
-            if (ajaxRequest.readyState === 4) {
-                if (ajaxRequest.status === 200) {
-                    location.reload();
-                } else {
-                    console.log('Status error: ' + ajaxRequest.status);
-                }
+    let formData = new FormData();
+    formData.append('description', description);
+    formData.append('image', imageFile);
+
+    let ajaxRequest = new XMLHttpRequest();
+    ajaxRequest.addEventListener('readystatechange', function () {
+        if (ajaxRequest.readyState === 4) {
+            if (ajaxRequest.status === 200) {
+                location.reload();
+            } else {
+                console.log('Status error: ' + ajaxRequest.status);
             }
-        });
-
-        ajaxRequest.open('POST', '/publications');
-        ajaxRequest.setRequestHeader('Content-Type', 'application/json');
-        ajaxRequest.send(JSON.stringify(dataToSend));
+        }
     });
+
+    ajaxRequest.open('POST', '/publications');
+    ajaxRequest.send(formData);
 }
 
 function togglePublishButton() {

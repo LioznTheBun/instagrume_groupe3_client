@@ -1,36 +1,39 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {{ parent() }} - Profil
+	{{ parent() }}
+	- Profil
 {% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('css/profil.css') }}" type="text/css">
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/profil.css') }}" type="text/css">
 {% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
-       <div class="content_profil">
-       		<img class="avatar" src="{{ asset('images/photo-test1.png') }}" alt="">
-            <div>
-                <p class="pseudo_profil">Pseudo</p>
-            </div>
-            <div>
-                <p class="email_profil">{{ user.username }}</p>
-            </div>
-            <form id="profileForm" action="/update_profile" method="post">
-                <div>
-                    <label for="currentPassword">Current Password:</label>
-                    <input type="password" id="currentPassword" name="currentPassword" required>
-                </div>
-                <label for="password">New Password:</label>
-                <input type="password" id="password" name="password" required>
-                <div>
-                    <label for="confirmPassword">Confirm Password:</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" required>
-                </div>
-                <button type="button" onclick="updateProfile()">Changer son mot de passe</button>
-            </form>
-    </div>
+	<main class="container mt-4">
+		<article class="content_profil">
+			<img class="avatar" src="{{ asset('images/photo-test1.png') }}" alt="">
+			<div>
+				<p class="pseudo_profil">Pseudo</p>
+                <p class="username_profil"></p>
+			</div>
+			<div>
+				<p class="email_profil">{{ user.pseudo }}</p>
+			</div>
+			<form id="profileForm" action="/update_profile" method="post">
+				<div>
+					<label for="currentPassword">Current Password:</label>
+					<input type="password" id="currentPassword" name="currentPassword" required>
+				</div>
+				<label for="password">New Password:</label>
+				<input type="password" id="password" name="password" required>
+				<div>
+					<label for="confirmPassword">Confirm Password:</label>
+					<input type="password" id="confirmPassword" name="confirmPassword" required>
+				</div>
+				<button type="button" onclick="updateProfile()">Changer son mot de passe</button>
+			</form>
+		</acticle>
+	</main>
 {% endblock %}

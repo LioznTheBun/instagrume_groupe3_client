@@ -91,6 +91,9 @@ class PageController extends AbstractController
             $user = json_decode($jsonUser);
             $role = 'membre';
             if (!isset($user->roles)) {
+                $session->remove('token-session');
+                $session->clear();
+                $session->set('isUserConnected', false);
                 return $this->render('connexion.html.twig', ['response' => 'Votre session à expiré.', 'page' => 'connexion']);
             }
             if (in_array('ROLE_ADMIN', $user->roles)) {
@@ -162,7 +165,7 @@ class PageController extends AbstractController
     {
         $currentTime = time();
 
-        if ($expirationTime instanceof \DateTime && $expirationTime < $currentTime) {
+        if ($expirationTime instanceof \DateTime && $expirationTime < $currentTime / 1000) {
             return true;
         } else {
             return false;

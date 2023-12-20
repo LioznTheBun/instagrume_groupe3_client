@@ -104,8 +104,8 @@
 				</div>
 			</div>
 		{% endfor %}
+		{% if app.session.get('isUserConnected') != NULL and not post.is_locked %}
 		<textarea class="buttonAddPost" id="commentTextareaAccueil" placeholder="Ajouter un commentaire..." oninput="togglePublishButton()"></textarea>
-		{% if app.session.get('role') == 'membre' %}
 			<button id="publishButtonAccueil" onclick="createComm()">Publier</button>
 		{% endif %}
 	</div>

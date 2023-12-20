@@ -7,7 +7,7 @@
 
 {% block stylesheets %}
 {{ parent() }}
-<link rel="stylesheet" href="{{ asset('css/connexion.css') }}" type="text/css">
+<link rel="stylesheet" href="{{ asset('css/inscription.css') }}" type="text/css">
 {% endblock%}
 
 {% block javascripts %}
@@ -34,6 +34,9 @@
 						<input type='password' class='form-control' id='password' name='password' placeholder='Mot de passe' required>
 					</div>
 					<button type='submit' class='btn btn-success mt-4 w-100'>S'inscrire</button>
+					<div class="dejaInscrit mt-3">
+                        <a href="/login">Déjà inscrit ? Connectez-vous !</a>
+                    </div>
 				</form>
 			</div>
 		</div>

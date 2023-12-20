@@ -19,23 +19,24 @@
 		<img id="Instagrume-logo" src="{{ asset('images/logo.svg') }}" alt="Instagrume logo" draggable="false" height="70"/>
 	</div>
 {% if app.session.get('role') != NULL %}
-	<button id="createPublicationBtn" class="button_add_post" onclick="showPopup()">
-		<img src="{{ asset('images/add_post.png') }}">
-	</button>
+	<div class="button_creation">
+		<button id="createPublicationBtn" class="button_add_post" onclick="showPopup()">
+			<img src="{{ asset('images/add_post.png') }}">
+		</button>
+	</div>
 	<div id="popup" class="popup">
 		<div class="popup-content">
 			<div class="close" onclick="closePopup()">x</div>
-			<label for='inputDescription' class='form-label'>
-				<input id='inputDescription' class='form-control' type='text'>
-			</label>
+			<form action="/publications" method="post" enctype="multipart/form-data">
+				<label for="description" class="form-label">Description:
+					<input id="description" class="form-control" type="text" name="description">
+				</label>
 
-			<img id="uploadPreview" style="width: 300px; height: 280px;"/>
-			<div class="bottom-section">
-				<div class="div_publier">
-					<button class="publier" id="publishButtonCreationPost" onclick="createPublication()">Publier</button>
-				</div>
-				<input id="uploadImage" type="file" name="myPhoto"/>
-			</div>
+				<label for="photo" class="form-label">Sélectionnez une image:
+					<input id="photo" type="file" name="photo">
+				</label>
+				<input type="submit" value="Publier">
+			</form>
 		</div>
 	</div>
 {% endif %}
@@ -96,7 +97,7 @@
 	</div>
 	<div id="popupPublication" class="popupPublication">
 		<div class="popup-content-publication">
-			<div class="close" onclick="closePopupPublication()">Fermer</div>
+			<div class="close" onclick="closePopupPublication()">x</div>
 			<div class="left-content-popup">
 				<img class="post-img-top" src="http://127.0.0.1:3000/img/{{ post.photo }}" alt="Image">
 			</div>

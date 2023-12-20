@@ -40,6 +40,26 @@ class PageController extends AbstractController
         return $this->redirect('/profil');
     }
 
+    #[Route('/publications', methods: ['POST'])]
+    public function createPost(Request $request)
+    {
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+
+        $dataDescription = htmlspecialchars($_POST["description"]);
+
+        //pour gérer les images?? pas fonctionnel
+        //$photoFile = $request->files->get('photo');
+
+        //$photoPath = '/public/images/' . $photoFile->getClientOriginalName();
+        //$photoFile->move('/public/images/', $photoFile->getClientOriginalName());
+
+        $data = $this->jsonConverter->encodeToJson(["description" => $dataDescription, "photo" => $photoPath]);
+        $response = $this->apiLinker->postData('/publications', $data, $token);
+
+        return $this->redirect('/');
+    }
+
     #[Route('/inscription', methods: ['GET'])]
     public function displayInscriptionPage()
     {

@@ -15,6 +15,9 @@
 {% endblock %}
 
 {% block body %}
+	<div class="icon_top_logo">
+		<img id="Instagrume-logo" src="{{ asset('images/logo.svg') }}" alt="Instagrume logo" draggable="false" height="70"/>
+	</div>
 {% if app.session.get('role') != NULL %}
 	<button id="createPublicationBtn" class="button_add_post" onclick="showPopup()">
 		<img src="{{ asset('images/add_post.png') }}">
@@ -49,7 +52,7 @@
 							{{ post.date_publication.timestamp | date('Y-m-d H:i:s') }}</p>
 					</header>
 					<div class="post_img">
-						<img class="post-img-top" src="{{ asset('images/photo-test1.png') }}" alt="Image">
+						<img class="post-img-top" src="http://127.0.0.1:3000/img/{{ post.photo }}" alt="Image">
 					</div>
 					<div class="post-footer">
 						<div class="likes_dislikes_section">
@@ -95,11 +98,11 @@
 		<div class="popup-content-publication">
 			<div class="close" onclick="closePopupPublication()">Fermer</div>
 			<div class="left-content-popup">
-				<img class="post-img-top" src="{{ asset('images/photo-test1.png') }}" alt="">
+				<img class="post-img-top" src="http://127.0.0.1:3000/img/{{ post.photo }}" alt="Image">
 			</div>
 			<div class="right-content-popup">
 				<div class="avatar_pseudo_user_popup">
-					<a href="/profil"><img class="avatar_user" src="{{ asset('images/photo-test1.png') }}" alt=""></a>
+					<a href="/profil"><img class="avatar_user" src="http://127.0.0.1:3000/img/{{ post.auteur.avatar }}" alt=""></a>
 					<div class="pseudo_user_popup">{{ post.auteur.pseudo }}</div>
 				</div>
 				<div class="content_post_popup">

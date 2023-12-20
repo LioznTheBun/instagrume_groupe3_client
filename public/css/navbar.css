@@ -1,0 +1,49 @@
+.navbar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 20%;
+    background-color: #eeae5a;
+    box-sizing: border-box;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: white;
+    position: relative;
+}
+
+.navbar a:not(.no-hover):before {
+    content: "";
+    position: absolute;
+    width: 50%;
+    height: 1px;
+    bottom: 0;
+    left: 25%;
+    background-color: white;
+    visibility: hidden;
+    transform: scaleX(0);
+    transition: all 0.3s ease-in-out;
+}
+
+.navbar a:not(.no-hover):hover:before {
+    visibility: visible;
+    transform: scaleX(1);
+}
+
+.navbar_content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 50px;
+}
+
+.main_title {
+    font-size: 30px;
+    font-weight: bold;
+}

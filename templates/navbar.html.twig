@@ -1,48 +1,30 @@
 {{ role.it.is.not.designed|default(NULL) }}
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-	<div class="container">
-		<a class="navbar-brand" href="#"><img id="Instagrume-logo" src="{{ asset('images/logo.svg') }}" alt="Instagrume logo" draggable="false" height="70"/><span>Instagrume</span>
-		</a>
-
-		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="navbar-nav">
-				<li class="nav-item">
-					<a class="nav-link d-flex me-3 align-items-center {{ page == 'accueil' ? 'active' :'' }}" aria-current="page" href="/">Accueil</a>
-				</li>
-			</ul>
-
-			<form class="d-flex align-items-center w-100 form-search" action="/search">
-				<input type="search" class="form-control" placeholder="Pseudo à chercher" aria-label="Search"/>
-			</form>
-
-			<ul class="navbar-nav">
-				{% if app.session.get('role') != NULL %}
-					<li class="nav-item">
-						<a class="nav-link d-flex align-items-center {{ page == 'profil' ? 'active' :'' }}" href="/profil">Profil</a>
-					</li>
-				{% endif %}
-				{% if app.session.get('role') == 'admin' %}
-					<li class="nav-item">
-						<a class="nav-link d-flex align-items-center {{ page == 'Modération' ? 'active' :'' }}" href="/users">Modération</a>
-					</li>
-				{% endif %}
-				{% if app.session.get('role') == NULL %}
-					<li class="nav-item">
-						<a class="nav-link d-flex align-items-center {{ page == 'connexion' ? 'active' :'' }}" href="/login">Connexion</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link d-flex align-items-center {{ page == 'inscription' ? 'active' :'' }}" href="/inscription">Inscription</a>
-					</li>
-				{% endif %}
-				{% if app.session.get('role') != NULL %}
-					<li class="nav-item">
-						<a class="nav-link d-flex align-items-center" href="/logout">Déconnexion</a>
-					</li>
-				{% endif %}
-			</ul>
-		</div>
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('css/navbar.css') }}" type="text/css">
+{% endblock %}
+ <div class="navbar">
+	<div class="navbar_content">
+        <a href="/" class="no-hover">
+            <p class="main_title">Instagrume</p>
+        </a>
+        <a class="{{ page == 'accueil' ? 'active' :'' }}" href="/">Accueil</a>
+        <form action="/search">
+            <input type="search" placeholder="Pseudo à chercher" />
+        </form>
+        {% if app.session.get('role') != NULL %}
+            <a class="{{ page == 'profil' ? 'active' :'' }}" href="/profil">Profil</a>
+        {% endif %}
+        {% if app.session.get('role') == 'admin' %}
+            <a class="{{ page == 'Modération' ? 'active' :'' }}" href="/users">Modération</a>
+        {% endif %}
+        {% if app.session.get('role') == NULL %}
+            <a class="{{ page == 'connexion' ? 'active' :'' }}" href="/login">Connexion</a>
+            <a class="{{ page == 'inscription' ? 'active' :'' }}" href="/inscription">Inscription</a>
+        {% endif %}
+        {% if app.session.get('role') != NULL %}
+            <a href="/logout">Déconnexion</a>
+        {% endif %}
 	</div>
-</nav>
+</div>
+
+

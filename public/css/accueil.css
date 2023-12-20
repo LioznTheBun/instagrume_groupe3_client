@@ -222,3 +222,14 @@
 .post_img {
     margin-bottom: 10px;
 }
+
+.icon_top_logo img {
+    width: 250px;
+    height: 250px;
+    margin-bottom: -30px;
+}
+
+.icon_top_logo {
+    width: fit-content;
+    margin: auto;
+}   

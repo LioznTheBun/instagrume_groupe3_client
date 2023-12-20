@@ -11,8 +11,8 @@ function showPublication(postId) {
             if (ajaxRequest.status === 200) {
                 var publicationDetails = JSON.parse(ajaxRequest.responseText);
 
-                document.querySelector('.post-img-top').src = "images/photo-test1.png";
-                document.querySelector('.avatar_user').src = "images/photo-test1.png";
+                document.querySelector('.post-img-top').src = "http://127.0.0.1:3000/img/" + publicationDetails.photo;
+                document.querySelector('.avatar_user').src = "http://127.0.0.1:3000/img/" + publicationDetails.auteur.avatar;
                 document.querySelector('.pseudo_user_popup').innerHTML = publicationDetails.auteur.pseudo;
                 document.querySelector('.content_post_popup').innerHTML = '<p>' + publicationDetails.description + '</p>';
                 document.querySelector('.date_post_popup').innerHTML = '<p class="date_post">Publié le ' + publicationDetails.date_publication + '</p>';

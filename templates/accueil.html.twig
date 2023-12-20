@@ -11,13 +11,14 @@
 
 {% block javascripts %}
 	{{ parent() }}
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 	<script src="{{ asset('js/accueil.js') }}"></script>
 {% endblock %}
 
 {% block body %}
-	<div class="icon_top_logo">
-		<img id="Instagrume-logo" src="{{ asset('images/logo.svg') }}" alt="Instagrume logo" draggable="false" height="70"/>
-	</div>
+<div class="icon_top_logo">
+	<img id="Instagrume-logo" src="{{ asset('images/logo.svg') }}" alt="Instagrume logo" draggable="false" height="70"/>
+</div>
 {% if app.session.get('role') != NULL %}
 	<div class="button_creation">
 		<button id="createPublicationBtn" class="button_add_post" onclick="showPopup()">
@@ -51,6 +52,19 @@
 						<p class="pseudo_user">{{ post.auteur.pseudo }}</p>
 						<p class="date_post">●
 							{{ post.date_publication.timestamp | date('Y-m-d H:i:s') }}</p>
+						{% if app.session.get('role') == 'admin' %}
+							{% if post.is_locked %}
+								<label class="toggle">
+									<input type="checkbox" class="lockToggle" data-post-id='{{post.id}}'>
+									<span class="labels" data-on="Locked" data-off="Unlocked"></span>
+								</label>
+							{% else %}
+								<label class="toggle">
+									<input type="checkbox" class="lockToggle" data-post-id='{{post.id}}' checked>
+									<span class="labels" data-on="Locked" data-off="Unlocked"></span>
+								</label>
+							{% endif %}
+						{% endif %}
 					</header>
 					<div class="post_img">
 						<img class="post-img-top" src="http://127.0.0.1:3000/img/{{ post.photo }}" alt="Image">

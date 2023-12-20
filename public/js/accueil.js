@@ -1,3 +1,24 @@
+
+$(document).ready(function () {
+    $('.lockToggle').change(function () {
+        var postId = $(this).data('post-id');
+        var isLocked = $(this).prop('checked');
+
+        var route = isLocked ? '/unlock/' : '/lock/';
+
+        $.ajax({
+            type: 'PUT',
+            url: route + postId,
+            success: function (response) {
+                console.log('User status changed successfully:', response);
+            },
+            error: function (error) {
+                console.error('Error changing user status:', error);
+            }
+        });
+    });
+});
+
 function showPopup() {
     document.getElementById('popup').style.display = 'block';
 }

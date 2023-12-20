@@ -40,7 +40,7 @@ class PageController extends AbstractController
         return $this->redirect('/profil');
     }
 
-    #[Route('/publications', methods: ['POST'])]
+    /*#[Route('/publications', methods: ['POST'])]
     public function createPost(Request $request)
     {
         $session = $request->getSession();
@@ -58,7 +58,7 @@ class PageController extends AbstractController
         $response = $this->apiLinker->postData('/publications', $data, $token);
 
         return $this->redirect('/');
-    }
+    }*/
 
     #[Route('/inscription', methods: ['GET'])]
     public function displayInscriptionPage()
@@ -188,6 +188,40 @@ class PageController extends AbstractController
             }
         }
         $response = $this->apiLinker->updateData('/unban/' . $userId, $token);
+
+        return new Response($response);
+    }
+
+    #[Route('/lock/{postId}', methods: ['PUT'])]
+    public function lockPost($postId, Request $request)
+    {
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+        if ($session->get('isUserConnected')) {
+            if ($this->isTokenExpired($session->get('expiration'))) {
+                $session->remove('token-session');
+                $session->clear();
+                return $this->redirect('/login');
+            }
+        }
+        $response = $this->apiLinker->updateData('/lock/' . $postId, $token);
+
+        return new Response($response);
+    }
+
+    #[Route('/unlock/{postId}', methods: ['PUT'])]
+    public function unlockPost($postId, Request $request)
+    {
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+        if ($session->get('isUserConnected')) {
+            if ($this->isTokenExpired($session->get('expiration'))) {
+                $session->remove('token-session');
+                $session->clear();
+                return $this->redirect('/login');
+            }
+        }
+        $response = $this->apiLinker->updateData('/unlock/' . $postId, $token);
 
         return new Response($response);
     }

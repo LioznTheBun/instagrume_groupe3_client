@@ -13,3 +13,14 @@
     font-weight: bold;
     font-size: 25px;
 }
+
+.publications_title {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+img {
+    width: 150px;
+    height: 150px;
+}

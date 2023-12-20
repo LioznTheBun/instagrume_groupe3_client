@@ -10,30 +10,39 @@
 	<link rel="stylesheet" href="{{ asset('css/profil.css') }}" type="text/css">
 {% endblock %}
 
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('js/profil.js') }}"></script>
+{% endblock %}
+
 {% block body %}
 	<main class="container mt-4">
 		<article class="content_profil">
-			<img class="avatar" src="{{ asset('images/photo-test1.png') }}" alt="">
-			<div>
-				<p class="pseudo_profil">Pseudo</p>
-                <p class="username_profil"></p>
+			<div class="left_content_profil">
+				<img class="avatar" src="http://127.0.0.1:3000/img/{{ user.avatar }}" alt="Avatar">
 			</div>
-			<div>
-				<p class="email_profil">{{ user.pseudo }}</p>
+			<div class="right_content_profil">
+				<div>
+					<p class="pseudo_profil">{{ user.pseudo }}</p>
+				</div>
+				<div>
+					<p class="email_profil">{{ user.email }}</p>
+				</div>
+				<form id="profileForm" action="/changePass" method="POST">
+					<label for="password">Nouveau mot de passe:</label>
+					<input type="hidden" id="id" name="id" value="{{ user.id }}" required>
+					<input type="password" id="password" name="password" required>
+					<button type="submit">Modifier mon mot de passe</button>
+				</form>
 			</div>
-			<form id="profileForm" action="/update_profile" method="post">
-				<div>
-					<label for="currentPassword">Current Password:</label>
-					<input type="password" id="currentPassword" name="currentPassword" required>
-				</div>
-				<label for="password">New Password:</label>
-				<input type="password" id="password" name="password" required>
-				<div>
-					<label for="confirmPassword">Confirm Password:</label>
-					<input type="password" id="confirmPassword" name="confirmPassword" required>
-				</div>
-				<button type="button" onclick="updateProfile()">Changer son mot de passe</button>
-			</form>
-		</acticle>
+		</article>
+		<div class="publications_profil">
+			<div class="publications_title">
+				<p>Mes publications ({{ user.publications is defined ? user.publications|length : 0 }})</p>
+			</div>
+			{% for publication in user.publications %}
+				<p>{{ publication.description }}</p>
+			{% endfor %}
+		</div>
 	</main>
 {% endblock %}

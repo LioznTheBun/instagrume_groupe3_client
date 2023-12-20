@@ -5,7 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-
+use App\Service\JsonConverter;
 use App\Service\ApiLinker;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,16 +14,30 @@ class PageController extends AbstractController
 {
 
     private $apiLinker;
+    private $jsonConverter;
 
-    public function __construct(ApiLinker $apiLinker)
+    public function __construct(ApiLinker $apiLinker, JsonConverter $jsonConverter)
     {
         $this->apiLinker = $apiLinker;
+        $this->jsonConverter = $jsonConverter;
     }
 
     #[Route('/login', methods: ['GET'])]
     public function displayConnexionPage()
     {
         return $this->render('connexion.html.twig', ['page' => 'connexion']);
+    }
+
+    #[Route('/changePass', methods: ['POST'])]
+    public function changePass(Request $request)
+    {
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+        $dataId = htmlspecialchars($_POST["id"]);
+        $dataPass = htmlspecialchars($_POST["password"]);
+        $data = $this->jsonConverter->encodeToJson(["id" => $dataId, "password" => $dataPass]);
+        $response = $this->apiLinker->putData('/changePass', $data, $token);
+        return $this->redirect('/profil');
     }
 
     #[Route('/inscription', methods: ['GET'])]
@@ -91,9 +105,6 @@ class PageController extends AbstractController
             $user = json_decode($jsonUser);
             $role = 'membre';
             if (!isset($user->roles)) {
-                $session->remove('token-session');
-                $session->clear();
-                $session->set('isUserConnected', false);
                 return $this->render('connexion.html.twig', ['response' => 'Votre session à expiré.', 'page' => 'connexion']);
             }
             if (in_array('ROLE_ADMIN', $user->roles)) {
@@ -139,9 +150,9 @@ class PageController extends AbstractController
                 return $this->redirect('/login');
             }
         }
-        $response = $this->apiLinker->updateData('/ban' . $userId, $token);
+        $response = $this->apiLinker->updateData('/ban/' . $userId, $token);
 
-        return new Response(json_decode($response));
+        return new Response($response);
     }
 
     #[Route('/unban/{userId}', methods: ['PUT'])]
@@ -156,16 +167,16 @@ class PageController extends AbstractController
                 return $this->redirect('/login');
             }
         }
-        $response = $this->apiLinker->updateData('/unban' . $userId, $token);
+        $response = $this->apiLinker->updateData('/unban/' . $userId, $token);
 
-        return new Response(json_decode($response));
+        return new Response($response);
     }
 
     private function isTokenExpired($expirationTime)
     {
         $currentTime = time();
 
-        if ($expirationTime instanceof \DateTime && $expirationTime < $currentTime / 1000) {
+        if ($expirationTime instanceof \DateTime && $expirationTime < $currentTime) {
             return true;
         } else {
             return false;

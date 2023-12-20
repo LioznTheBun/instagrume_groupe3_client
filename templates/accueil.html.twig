@@ -8,6 +8,7 @@
 	{{ parent() }}
 	<link rel="stylesheet" href="{{ asset('css/accueil.css') }}" type="text/css">
 {% endblock %}
+
 {% block javascripts %}
 	{{ parent() }}
 	<script src="{{ asset('js/accueil.js') }}"></script>
@@ -20,7 +21,7 @@
 	</button>
 	<div id="popup" class="popup">
 		<div class="popup-content">
-			<div class="close" onclick="closePopup()">Fermer</div>
+			<div class="close" onclick="closePopup()">x</div>
 			<label for='inputDescription' class='form-label'>
 				<input id='inputDescription' class='form-control' type='text'>
 			</label>
@@ -35,16 +36,14 @@
 		</div>
 	</div>
 {% endif %}
-<!--Bouche for qui n'affiche que 3 posts-->
+<!-- Boucle for qui n'affiche que 3 posts -->
 {% for post in posts|slice(0, 3) %}
 	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-md-8 mt-3">
 				<article class="post mb-3" data-post-id="{{ post.id }}">
-					<header
-						class="post-header">
-						<!--<div class="avatar_pseudo_user"> {{ post.auteur.avatar }} {{ post.auteur.pseudo }} </div> -->
-						<a href="/profil"><img class="avatar_user" src="{{ asset('images/photo-test1.png') }}" alt=""></a>
+					<header class="post-header">
+						<a href="/profil"><img class="avatar_user" src="http://127.0.0.1:3000/img/{{ post.auteur.avatar }}" alt=""></a>
 						<p class="pseudo_user">{{ post.auteur.pseudo }}</p>
 						<p class="date_post">●
 							{{ post.date_publication.timestamp | date('Y-m-d H:i:s') }}</p>
@@ -89,7 +88,7 @@
 		{% endfor %}
 		<textarea class="buttonAddPost" id="commentTextareaAccueil" placeholder="Ajouter un commentaire..." oninput="togglePublishButton()"></textarea>
 		{% if app.session.get('role') == 'membre' %}
-			<button id="publishButtonAccueil" style="display:none;">Publier</button>
+			<button id="publishButtonAccueil" onclick="createComm()">Publier</button>
 		{% endif %}
 	</div>
 	<div id="popupPublication" class="popupPublication">
@@ -101,9 +100,7 @@
 			<div class="right-content-popup">
 				<div class="avatar_pseudo_user_popup">
 					<a href="/profil"><img class="avatar_user" src="{{ asset('images/photo-test1.png') }}" alt=""></a>
-					<div class="pseudo_user_popup">
-						{{ post.auteur.pseudo }}
-					</div>
+					<div class="pseudo_user_popup">{{ post.auteur.pseudo }}</div>
 				</div>
 				<div class="content_post_popup">
 					<p>{{ post.description }}</p>
@@ -137,11 +134,7 @@
 			<button id="publishButtonPopup" onclick="">Publier</button>
 		</div>
 	</div>
-	{% if 'role' == 'admin' %}
-		<div class="post-footer">
-			<section
-				class="admin-tab"><!-- Add your admin content here -->
-			</section>
-		</div>
-	{% endif %}
-</article></div></div></div>{% endfor %}{% endblock %}
+</div></div>{% if 'role' == 'admin' %}
+<div class="post-footer">
+	<section class="admin-tab"><!-- Add your admin content here --></section>
+</div>{% endif %}</article></div></div></div>{% endfor %}{% endblock %}

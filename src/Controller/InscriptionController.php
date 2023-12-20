@@ -9,6 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use App\Service\JsonConverter;
 use App\Service\ApiLinker;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class InscriptionController extends AbstractController
@@ -32,14 +33,18 @@ class InscriptionController extends AbstractController
         $email = $request->request->get('email');
         $pseudo = $request->request->get('pseudo');
         $password = $request->request->get('password');
-        $avatar = "";//$request->request->get('avatar') ?
+
+        $image = $request->files->get('avatar');
+        $imageData = file_get_contents($image->getPathName());
+        $base64 = base64_encode($imageData);
+
 
 
         $data = $this->jsonConverter->encodeToJson([
             'email' => $email,
             'pseudo' => $pseudo,
             'password' => $password,
-            'avatar' => $avatar
+            'avatar' => $base64
         ]);
 
         $response = $this->apiLinker->postData('/inscription', $data, $token);

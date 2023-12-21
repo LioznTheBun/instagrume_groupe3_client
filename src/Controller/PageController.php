@@ -9,7 +9,6 @@ use App\Service\JsonConverter;
 use App\Service\ApiLinker;
 use Symfony\Component\HttpFoundation\Response;
 
-
 class PageController extends AbstractController
 {
 
@@ -38,6 +37,33 @@ class PageController extends AbstractController
         $data = $this->jsonConverter->encodeToJson(["id" => $dataId, "password" => $dataPass]);
         $response = $this->apiLinker->putData('/changePass', $data, $token);
         return $this->redirect('/profil');
+    }
+
+    #[Route('/createComm', methods: ['POST'], name: 'api_create_comment')]
+    public function createComm(Request $request)
+    {
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+
+        $myselfResponse = $this->apiLinker->getData('/myself', $token);
+        $myselfData = json_decode($myselfResponse);
+        $dataAuteurId = $myselfData->id;
+
+        $dataContenu = htmlspecialchars($request->request->get("contenu"));
+        $dataDate = htmlspecialchars($request->request->get("dateComm"));
+        $dataPublication = htmlspecialchars($request->request->get("publication"));
+        $dataParentCommentId = htmlspecialchars($request->request->get("parentCommentId"));
+
+        $data = $this->jsonConverter->encodeToJson([
+            "contenu" => $dataContenu,
+            "dateComm" => $dataDate,
+            "auteur_id" => $dataAuteurId,
+            "publication" => $dataPublication,
+            "parentCommentId" => $dataParentCommentId,
+        ]);
+    
+        $response = $this->apiLinker->postData('/commentaires', $data, $token);
+        return $this->redirect('/');
     }
 
     /*#[Route('/publications', methods: ['POST'])]
@@ -142,7 +168,7 @@ class PageController extends AbstractController
             $user = json_decode($jsonUser);
             $role = 'membre';
             if (!isset($user->roles)) {
-                return $this->render('connexion.html.twig', ['response' => 'Votre session à expiré.', 'page' => 'connexion']);
+                return $this->render('connexion.html.twig', ['response' => 'Votre session a expiré.', 'page' => 'connexion']);
             }
             if (in_array('ROLE_ADMIN', $user->roles)) {
                 $role = 'admin';
@@ -154,6 +180,12 @@ class PageController extends AbstractController
         $session->set('role', $role);
 
         return $this->render('accueil.html.twig', ['page' => 'accueil', 'posts' => $arrayPosts]);
+    }
+
+    #[Route('/publications', name: 'update_description', methods: ['PUT'])]
+    public function updateDescription(Request $request)
+    {
+       
     }
 
     #[Route('/users', methods: ['GET'], condition: "service('route_checker').checkAdmin(request)")]

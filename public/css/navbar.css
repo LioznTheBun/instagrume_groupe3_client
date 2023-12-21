@@ -47,3 +47,37 @@
     font-size: 30px;
     font-weight: bold;
 }
+
+
+@media screen and (max-width: 768px) {
+    .navbar {
+        width: 100%;
+        position: static;
+    }
+
+    .main_title {
+        margin-bottom: -15px;
+        margin-top: -50px;
+    }
+
+}
+
+/*@media screen and (max-width: 768px) {
+    .navbar {
+        width: 100%;
+        position: static;
+    }
+
+    .main_title {
+        margin-top: -50px;
+    }
+}
+
+
+
+@media screen and (max-width: 1024px) {
+    .navbar {
+        width: 100%;
+        position: static;
+    }
+}*/

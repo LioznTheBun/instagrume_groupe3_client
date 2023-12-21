@@ -24,3 +24,7 @@ img {
     width: 150px;
     height: 150px;
 }
+
+.container {
+    margin-left: 30%;
+}

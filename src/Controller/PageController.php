@@ -83,6 +83,23 @@ class PageController extends AbstractController
         return $this->render('profil.html.twig', ['user' => $user, 'page' => 'profil']);
     }
 
+    #[Route('/user/{id}', methods: ['GET'],  name: 'display_profil_by_id')]
+    public function displayProfilPageById($id, Request $request)
+    {
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+        if ($session->get('isUserConnected')) {
+            if ($this->isTokenExpired($session->get('expiration'))) {
+                $session->remove('token-session');
+                $session->clear();
+                return $this->redirect('/login');
+            }
+        }
+        $response = $this->apiLinker->getData('/user/' . $id, $token);
+        $user = json_decode($response);
+        return $this->render('profil.html.twig', ['user' => $user, 'page' => 'profil']);
+    }
+
     #[Route('/publications/{id}', methods: ['GET'], name: 'display_publication_by_id')]
     public function displayPublicationsByIdPage($id, Request $request)
     {

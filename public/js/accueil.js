@@ -71,7 +71,6 @@ function closePopupPublication() {
 }
 
 function closePopup() {
-    resetPopup();
     document.getElementById('popup').style.display = 'none';
 }
 document.getElementById('imageButton').addEventListener('click', function () {
@@ -123,7 +122,3 @@ function togglePublishButton() {
         publishButtonAccueil.style.display = 'none';
     }
 }
-
-
-
-

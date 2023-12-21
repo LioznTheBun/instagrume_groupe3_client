@@ -19,6 +19,14 @@
 <div class="icon_top_logo">
 	<img id="Instagrume-logo" src="{{ asset('images/logo.svg') }}" alt="Instagrume logo" draggable="false" height="70"/>
 </div>
+<div class="search_bar">
+    <form action="/search">
+        <input type="search" placeholder="Rechercher" />
+        <button type="submit" class="search_button">
+            <img class="loupe_search_bar" src="{{ asset('images/loupe.png') }}" alt="Rechercher" />
+        </button>
+    </form>
+</div>
 {% if app.session.get('role') != NULL %}
 	<div class="button_creation">
 		<button id="createPublicationBtn" class="button_add_post" onclick="showPopup()">
@@ -27,16 +35,19 @@
 	</div>
 	<div id="popup" class="popup">
 		<div class="popup-content">
-			<div class="close" onclick="closePopup()">x</div>
+			<div class="close" onclick="closePopup()">
+				<img class="close_icon" src="{{ asset('images/close.png') }}"/>
+			</div>
 			<form action="/publications" method="post" enctype="multipart/form-data">
-				<label for="description" class="form-label">Description:
-					<input id="description" class="form-control" type="text" name="description">
-				</label>
-
+				<div class="description_popup">
+					<label for="description" class="form-label">
+						<input id="description" class="form-control" type="text" name="description" placeholder="À quoi pensez-vous ?">
+					</label>
+				</div>
 				<label for="photo" class="form-label">Sélectionnez une image:
 					<input id="photo" type="file" name="photo">
 				</label>
-				<input type="submit" value="Publier">
+				<input class="button_submit_post" type="submit" value="Publier">
 			</form>
 		</div>
 	</div>
@@ -48,7 +59,9 @@
 			<div class="col-md-8 mt-3">
 				<article class="post mb-3" data-post-id="{{ post.id }}">
 					<header class="post-header">
-						<a href="/profil"><img class="avatar_user" src="http://127.0.0.1:3000/img/{{ post.auteur.avatar }}" alt=""></a>
+						<a href="{{ path('display_profil_by_id', {'id': post.auteur.id}) }}">
+							<img class="avatar_user" src="http://127.0.0.1:3000/img/{{ post.auteur.avatar }}" alt="">
+						</a>
 						<p class="pseudo_user">{{ post.auteur.pseudo }}</p>
 						<p class="date_post">●
 							{{ post.date_publication.timestamp | date('Y-m-d H:i:s') }}</p>
@@ -111,7 +124,9 @@
 	</div>
 	<div id="popupPublication" class="popupPublication">
 		<div class="popup-content-publication">
-			<div class="close" onclick="closePopupPublication()">x</div>
+			<div class="close" onclick="closePopupPublication()">
+				<img class="close_icon" src="{{ asset('images/close.png') }}">
+			</div>
 			<div class="left-content-popup">
 				<img class="post-img-top" src="http://127.0.0.1:3000/img/{{ post.photo }}" alt="Image">
 			</div>

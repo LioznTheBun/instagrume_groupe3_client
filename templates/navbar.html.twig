@@ -8,9 +8,6 @@
             <p class="main_title">Instagrume</p>
         </a>
         <a class="{{ page == 'accueil' ? 'active' :'' }}" href="/">Accueil</a>
-        <form action="/search">
-            <input type="search" placeholder="Pseudo à chercher" />
-        </form>
         {% if app.session.get('role') != NULL %}
             <a class="{{ page == 'profil' ? 'active' :'' }}" href="/profil">Profil</a>
         {% endif %}

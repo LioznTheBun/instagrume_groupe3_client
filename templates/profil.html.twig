@@ -40,9 +40,9 @@
 			<div class="publications_title">
 				<p>Mes publications ({{ user.publications is defined ? user.publications|length : 0 }})</p>
 			</div>
-			{% for publication in user.publications %}
-				<p>{{ publication.description }}</p>
-			{% endfor %}
+		{# {% for publication in user.publications %}
+			<p>{{ publication.description }}</p>
+		{% endfor %} #}
 		</div>
 	</main>
 {% endblock %}

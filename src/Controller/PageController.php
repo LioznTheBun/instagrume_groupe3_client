@@ -66,6 +66,34 @@ class PageController extends AbstractController
         return $this->redirect('/');
     }
 
+    #[Route('/createCommReply', methods: ['POST'], name: 'api_create_comment_reply')]
+    public function createCommReply(Request $request)
+    {
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+
+        $myselfResponse = $this->apiLinker->getData('/myself', $token);
+        $myselfData = json_decode($myselfResponse);
+        $dataAuteurId = $myselfData->id;
+
+        $dataContenu = htmlspecialchars($request->request->get("contenu"));
+        $dataDate = htmlspecialchars($request->request->get("dateComm"));
+        $dataPublication = htmlspecialchars($request->request->get("publication"));
+        $dataParentCommentId = htmlspecialchars($request->request->get("parentCommentId"));
+
+        $data = $this->jsonConverter->encodeToJson([
+            "contenu" => $dataContenu,
+            "dateComm" => $dataDate,
+            "auteur_id" => $dataAuteurId,
+            "publication" => $dataPublication,
+            "parentCommentId" => $dataParentCommentId,
+        ]);
+
+        $response = $this->apiLinker->postData('/commentaires', $data, $token);
+
+        return $this->redirect('/');
+    }
+
     /*#[Route('/publications', methods: ['POST'])]
     public function createPost(Request $request)
     {

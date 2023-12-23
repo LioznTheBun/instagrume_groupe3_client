@@ -196,6 +196,8 @@ class PageController extends AbstractController
             $user = json_decode($jsonUser);
             $role = 'membre';
             if (!isset($user->roles)) {
+                $session->remove('token-session');
+                $session->clear();
                 return $this->render('connexion.html.twig', ['response' => 'Votre session a expiré.', 'page' => 'connexion']);
             }
             if (in_array('ROLE_ADMIN', $user->roles)) {

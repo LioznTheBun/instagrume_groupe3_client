@@ -48,6 +48,7 @@ class ConnexionController extends AbstractController
             if (in_array('ROLE_ADMIN', $user->roles)) {
                 $role = 'admin';
             }
+            $session->set('idUser', $user->id);
             $session->set('role', $role);
             $session->set('isUserConnected', true);
             $session->set('expiration', $expirationDate);

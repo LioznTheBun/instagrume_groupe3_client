@@ -63,8 +63,24 @@
                             <img class="avatar_user" src="http://127.0.0.1:3000/img/{{ post.auteur.avatar }}" alt="">
                         </a>
                         <p class="pseudo_user">{{ post.auteur.pseudo }}</p>
-                        <p class="date_post">●
-                            {{ post.date_publication.timestamp | date('Y-m-d H:i:s') }}</p>
+                       <p class="date_post">
+                            {% set timestamp = post.date_publication.timestamp * 1000 %}
+                            {% set differenceEnMillisecondes = "now"|date("U") * 1000 - timestamp %}
+                            {% set seconds = differenceEnMillisecondes / 1000 %}
+                            {% set minutes = seconds / 60 %}
+                            {% set hours = minutes / 60 %}
+                            {% set days = hours / 24 %}
+
+                            {% if days > 0 %}
+                                ● {{ days|round }} j
+                            {% elseif hours > 0 %}
+                                ● {{ hours|round }} h
+                            {% elseif minutes > 0 %}
+                                ● {{ minutes|round }} minute(s)
+                            {% else %}
+                                il y a quelques instants
+                            {% endif %}
+                        </p>
                         {% if app.session.get('role') == 'admin' %}
                             {% if post.is_locked %}
                                 <label class="toggle">
@@ -103,11 +119,33 @@
                         <div class="post-body">
                         <div class="comment-header">
                             <p class="post_text_pseudo">{{ commentaire.auteur.pseudo }}</p>
-                            <button class="reply-button" onclick="toggleReplyForm('{{ commentaire.id }}', event)">Répondre</button>
+                            {% if app.session.get('isUserConnected') != NULL %}
+                            <div class="button_answer_accueil">
+                                <button class="reply-button" onclick="toggleReplyFormAccueil('{{ commentaire.id }}', event)">Répondre</button>
+                            </div>
+                            {% endif %}
                         </div>
                             <div class="post_content">
                                 <p class="post_text_content">{{ commentaire.contenu }}</p>
                             </div>
+                            <p class="post_date">
+                            {% set timestamp = commentaire.date_comm.timestamp * 1000 %}
+                            {% set differenceEnMillisecondes = "now"|date("U") * 1000 - timestamp %}
+                            {% set seconds = differenceEnMillisecondes / 1000 %}
+                            {% set minutes = seconds / 60 %}
+                            {% set hours = minutes / 60 %}
+                            {% set days = hours / 24 %}
+
+                            {% if days > 0 %}
+                                {{ days|round }} j
+                            {% elseif hours > 0 %}
+                                {{ hours|round }} h
+                            {% elseif minutes > 0 %}
+                                {{ minutes|round }} minute(s)
+                            {% else %}
+                                il y a quelques instants
+                            {% endif %}
+                            </p>
                             <div class="like_dislike_post">
                                 {% if commentaire.rating_commentaire is not null %}
                                     <div class="comment_like_post">
@@ -167,6 +205,11 @@
                         {{ post.date_publication.timestamp | date('Y-m-d H:i:s') }}</p>
                 </div>
                 <section class="commentaires_popup">
+                {% if app.session.get('isUserConnected') != NULL %}
+                    <div class="commentaires-popup user-connected">
+                {% else %}
+                    <div class="commentaires-popup user-not-connected">
+                {% endif %}
                     {% for commentaire in post.commentaires %}
                         <div class="commentaire post">
                             <div class="post_body_popup">

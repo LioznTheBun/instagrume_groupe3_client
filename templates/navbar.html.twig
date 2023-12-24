@@ -2,26 +2,29 @@
 {% block stylesheets %}
 	<link rel="stylesheet" href="{{ asset('css/navbar.css') }}" type="text/css">
 {% endblock %}
- <div class="navbar">
+<div class="navbar">
 	<div class="navbar_content">
-        <a href="/" class="no-hover">
-            <p class="main_title">Instagrume</p>
-        </a>
-        <a class="{{ page == 'accueil' ? 'active' :'' }}" href="/">Accueil</a>
-        {% if app.session.get('role') != NULL %}
-            <a class="{{ page == 'profil' ? 'active' :'' }}" href="/profil">Profil</a>
-        {% endif %}
-        {% if app.session.get('role') == 'admin' %}
-            <a class="{{ page == 'Modération' ? 'active' :'' }}" href="/users">Modération</a>
-        {% endif %}
-        {% if app.session.get('role') == NULL %}
-            <a class="{{ page == 'connexion' ? 'active' :'' }}" href="/login">Connexion</a>
-            <a class="{{ page == 'inscription' ? 'active' :'' }}" href="/inscription">Inscription</a>
-        {% endif %}
-        {% if app.session.get('role') != NULL %}
-            <a href="/logout">Déconnexion</a>
-        {% endif %}
+		<a href="/" class="no-hover">
+			<p class="main_title">Instagrume</p>
+		</a>
+		<a class="{{ page == 'accueil' ? 'active' :'' }}" href="/">Accueil</a>
+		{% if app.session.get('role') != NULL %}
+			<a class="{{ page == 'profil' ? 'active' :'' }}" href="/profil">Profil</a>
+		{% endif %}
+		{% if app.session.get('role') == 'admin' %}
+			<a class="{{ page == 'Modération' ? 'active' :'' }}" href="/users">Modération</a>
+		{% endif %}
+		{% if app.session.get('role') == NULL %}
+			<a class="{{ page == 'connexion' ? 'active' :'' }}" href="/login">Connexion</a>
+			<a class="{{ page == 'inscription' ? 'active' :'' }}" href="/inscription">Inscription</a>
+		{% endif %}
+		{% if app.session.get('role') != NULL %}
+			<a href="/logout">Déconnexion</a>
+		{% endif %}
+        <input onclick="toggleDarkMode(this)" type="checkbox" id="toggle_checkbox">
+        <label id='labelTggl' for="toggle_checkbox">
+            <div id="star"></div>
+            <div id="moon"></div>
+        </label>
 	</div>
 </div>
-
-

@@ -69,3 +69,32 @@
 	transform: rotateY(180deg) scale(-1, 1);
 	opacity: 1;
   }
+
+  body {
+	background-color: white;
+	color: black;
+  }
+  
+  .dark-mode {
+	background-color: black;
+	color: white;
+  }
+
+  .dark-mode input,
+  .dark-mode textarea{
+	background-color: #555;
+	color: #fff;
+	border: 1px solid #777;
+}
+
+.dark-mode ::placeholder {
+	color: #bbb;
+}
+
+.dark-mode table,
+.dark-mode th,
+.dark-mode td {
+	border-color: rgb(20, 20, 20);
+	background-color: rgb(20, 20, 20);
+	color: white;
+}

@@ -19,7 +19,14 @@
 	<main class="container mt-4">
 		<article class="content_profil">
 			<div class="left_content_profil">
-				<img class="avatar" src="http://127.0.0.1:3000/img/{{ user.avatar }}" alt="Avatar">
+				<label for="avatarInput">
+					<img id="avatar" class="avatar" src="http://127.0.0.1:3000/img/{{ user.avatar }}" alt="Avatar">
+				</label>
+				<form id="avatarForm" action="{{ path('upload_avatar') }}" method="post" enctype="multipart/form-data" style="display: none;">
+					<input type="file" id="avatarInput" name="avatar" accept="image/*" onchange="submitForm()">
+					<input type="hidden" id="id" name="id" value="{{ user.id }}" required>
+					<button type="submit" style="display: none;"></button>
+				</form>
 			</div>
 			<div class="right_content_profil">
 				<div>
@@ -42,9 +49,57 @@
 			<div class="publications_title">
 				<p>Mes publications ({{ user.publications is defined ? user.publications|length : 0 }})</p>
 			</div>
-			{# {% for publication in user.publications %}
+			{% for publication in user.publications %}
+				<div class="publications_main_card_profil">
+					<div class="publications_card_profil">
+						<div class="img_post_profil">
+							<img src="http://127.0.0.1:3000/img/{{ publication.photo }}"/>
+						</div>
+						<div class="edit_delete_icon">
+							<div class="edit_icon_div">
+								<img class="edit_icon" src="{{ asset('images/editer.png') }}" onclick="editDescription('{{ publication.id }}')">
+							</div>
+							<div class="delete_icon_div">
+								<img class="delete_icon" src="{{ asset('images/corbeille.png') }}" onclick="deletePublication('{{ publication.id }}', '{{ path('delete_publication', {'id': publication.id}) }}')">
+							</div>
+						</div>
+
 						<p>{{ publication.description }}</p>
-					{% endfor %} #}
+						<p class="date_post">
+							{% set timestamp = publication.date_publication.timestamp * 1000 %}
+							{% set differenceEnMillisecondes = "now"|date("U") * 1000 - timestamp %}
+							{% set seconds = differenceEnMillisecondes / 1000 %}
+							{% set minutes = seconds / 60 %}
+							{% set hours = minutes / 60 %}
+							{% set days = hours / 24 %}
+
+							{% if days > 0 %}
+								Publié il y a
+								{{ days|round }}
+								j
+							{% elseif hours > 0 %}
+								Publié il y a
+								{{ hours|round }}
+								h
+							{% elseif minutes > 0 %}
+								Publié il y a
+								{{ minutes|round }}
+								minute(s)
+							{% else %}
+								il y a quelques instants
+							{% endif %}
+						</p>
+
+						<form class="editForm" id="editForm{{ publication.id }}" action="{{ path('edit_publication') }}" method="post" style="display: none;">
+							<label for="editDescription">Nouvelle description :</label>
+							<input type="hidden" name="id" value="{{ publication.id }}" required>
+							<input type="text" name="description" required>
+							<button type="submit">Modifier</button>
+						</form>
+					</div>
+				</div>
+			{% endfor %}
+
 		</div>
 	</main>
 {% endblock %}

@@ -61,7 +61,7 @@ class PageController extends AbstractController
             "publication" => $dataPublication,
             "parentCommentId" => $dataParentCommentId,
         ]);
-    
+
         $response = $this->apiLinker->postData('/commentaires', $data, $token);
         return $this->redirect('/');
     }
@@ -92,6 +92,44 @@ class PageController extends AbstractController
         $response = $this->apiLinker->postData('/commentaires', $data, $token);
 
         return $this->redirect('/');
+    }
+    #[Route('/publications', methods: ['POST'], name: 'edit_publication')]
+    public function editPublication(Request $request)
+    {
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+        $dataIdPost = htmlspecialchars($_POST["id"]);
+        $dataDescription = htmlspecialchars($request->request->get("description"));
+
+        $data = $this->jsonConverter->encodeToJson(["id" => $dataIdPost, "description" => $dataDescription]);
+
+        $response = $this->apiLinker->putData('/publications', $data, $token);
+
+        return $this->redirect('/profil');
+    }
+    #[Route('/publications/{id}', methods: ['DELETE'], name: 'delete_publication')]
+    public function deletePublication($id, Request $request)
+    {
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+        $response = $this->apiLinker->deleteData('/publications/' . $id, $token);
+        return $this->redirect('/profil');
+    }
+    #[Route('/profil/avatar', methods: ['POST'], name: 'upload_avatar')]
+    public function uploadAvatar(Request $request): Response
+    {
+        $user = $this->getUser();
+        $file = $request->files->get('avatar');
+
+        if ($file) {
+            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+            $file->move($this->getParameter('avatar_directory'), $fileName);
+            $user->setAvatar($fileName);
+
+            return $this->redirectToRoute('profil');
+        }
+
+        return new Response('Error uploading avatar', 400);
     }
 
     /*#[Route('/publications', methods: ['POST'])]
@@ -137,7 +175,7 @@ class PageController extends AbstractController
         return $this->render('profil.html.twig', ['user' => $user, 'page' => 'profil']);
     }
 
-    #[Route('/user/{id}', methods: ['GET'],  name: 'display_profil_by_id')]
+    #[Route('/user/{id}', methods: ['GET'], name: 'display_profil_by_id')]
     public function displayProfilPageById($id, Request $request)
     {
         $session = $request->getSession();
@@ -215,7 +253,7 @@ class PageController extends AbstractController
     #[Route('/publications', name: 'update_description', methods: ['PUT'])]
     public function updateDescription(Request $request)
     {
-       
+
     }
 
     #[Route('/users', methods: ['GET'], condition: "service('route_checker').checkAdmin(request)")]

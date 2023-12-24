@@ -1,246 +1,260 @@
 {% extends 'base.html.twig' %}
 
 {% block titre %}
-    {{ parent() }}- Accueil
+	{{ parent() }}- Accueil
 {% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('css/accueil.css') }}" type="text/css">
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/accueil.css') }}" type="text/css">
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="{{ asset('js/accueil.js') }}"></script>
+	{{ parent() }}
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script src="{{ asset('js/accueil.js') }}"></script>
 {% endblock %}
 
 {% block body %}
 <div class="icon_top_logo">
-    <img id="Instagrume-logo" src="{{ asset('images/logo.svg') }}" alt="Instagrume logo" draggable="false" height="70"/>
+	<img id="Instagrume-logo" src="{{ asset('images/logo.svg') }}" alt="Instagrume logo" draggable="false" height="70"/>
 </div>
 <div class="search_bar">
-    <form action="/search">
-        <input type="search" placeholder="Rechercher" />
-        <button type="submit" class="search_button">
-            <img class="loupe_search_bar" src="{{ asset('images/loupe.png') }}" alt="Rechercher" />
-        </button>
-    </form>
+	<form action="/search">
+		<input type="search" placeholder="Rechercher"/>
+		<button type="submit" class="search_button">
+			<img class="loupe_search_bar" src="{{ asset('images/loupe.png') }}" alt="Rechercher"/>
+		</button>
+	</form>
 </div>
 {% if app.session.get('role') != NULL %}
-    <div class="button_creation">
-        <button id="createPublicationBtn" class="button_add_post" onclick="showPopup()">
-            <img src="{{ asset('images/add_post.png') }}">
-        </button>
-    </div>
-    <div id="popup" class="popup">
-        <div class="popup-content">
-            <div class="close" onclick="closePopup()">
-                <img class="close_icon" src="{{ asset('images/close.png') }}"/>
-            </div>
-            <form action="/publications" method="post" enctype="multipart/form-data">
-                <div class="description_popup">
-                    <label for="description" class="form-label">
-                        <input id="description" class="form-control" type="text" name="description" placeholder="À quoi pensez-vous ?">
-                    </label>
-                </div>
-                <label for="photo" class="form-label">Sélectionnez une image:
-                    <input id="photo" type="file" name="photo">
-                </label>
-                <input class="button_submit_post" type="submit" value="Publier">
-            </form>
-        </div>
-    </div>
+	<div class="button_creation">
+		<button id="createPublicationBtn" class="button_add_post" onclick="showPopup()">
+			<img src="{{ asset('images/add_post.png') }}">
+		</button>
+	</div>
+	<div id="popup" class="popup">
+		<div class="popup-content">
+			<div class="close" onclick="closePopup()">
+				<img class="close_icon" src="{{ asset('images/close.png') }}"/>
+			</div>
+			<form action="/publications" method="post" enctype="multipart/form-data">
+				<div class="description_popup">
+					<label for="description" class="form-label">
+						<input id="description" class="form-control" type="text" name="description" placeholder="À quoi pensez-vous ?">
+					</label>
+				</div>
+				<label for="photo" class="form-label">Sélectionnez une image:
+					<input id="photo" type="file" name="photo">
+				</label>
+				<input class="button_submit_post" type="submit" value="Publier">
+			</form>
+		</div>
+	</div>
 {% endif %}
 <!-- Boucle for qui n'affiche que 3 posts -->
 {% for post in posts|slice(0, 3) %}
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8 mt-3">
-                <article class="post mb-3" data-post-id="{{ post.id }}">
-                    <header class="post-header">
-                        <a href="{{ path('display_profil_by_id', {'id': post.auteur.id}) }}">
-                            <img class="avatar_user" src="http://127.0.0.1:3000/img/{{ post.auteur.avatar }}" alt="">
-                        </a>
-                        <p class="pseudo_user">{{ post.auteur.pseudo }}</p>
-                       <p class="date_post">
-                            {% set timestamp = post.date_publication.timestamp * 1000 %}
-                            {% set differenceEnMillisecondes = "now"|date("U") * 1000 - timestamp %}
-                            {% set seconds = differenceEnMillisecondes / 1000 %}
-                            {% set minutes = seconds / 60 %}
-                            {% set hours = minutes / 60 %}
-                            {% set days = hours / 24 %}
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-md-8 mt-3">
+				<article class="post mb-3" data-post-id="{{ post.id }}">
+					<header class="post-header">
+						<a href="/">
+							<img class="avatar_user" src="http://127.0.0.1:3000/img/{{ post.auteur.avatar }}" alt="">
+						</a>
+						<p class="pseudo_user">{{ post.auteur.pseudo }}</p>
+						<p class="date_post">
+							{% set timestamp = post.date_publication.timestamp * 1000 %}
+							{% set differenceEnMillisecondes = "now"|date("U") * 1000 - timestamp %}
+							{% set seconds = differenceEnMillisecondes / 1000 %}
+							{% set minutes = seconds / 60 %}
+							{% set hours = minutes / 60 %}
+							{% set days = hours / 24 %}
 
-                            {% if days > 0 %}
-                                ● {{ days|round }} j
-                            {% elseif hours > 0 %}
-                                ● {{ hours|round }} h
-                            {% elseif minutes > 0 %}
-                                ● {{ minutes|round }} minute(s)
-                            {% else %}
-                                il y a quelques instants
-                            {% endif %}
-                        </p>
-                        {% if app.session.get('role') == 'admin' %}
-                            {% if post.is_locked %}
-                                <label class="toggle">
-                                    <input type="checkbox" class="lockToggle" data-post-id='{{post.id}}'>
-                                    <span class="labels" data-on="Locked" data-off="Unlocked"></span>
-                                </label>
-                            {% else %}
-                                <label class="toggle">
-                                    <input type="checkbox" class="lockToggle" data-post-id='{{post.id}}' checked>
-                                    <span class="labels" data-on="Locked" data-off="Unlocked"></span>
-                                </label>
-                            {% endif %}
-                        {% endif %}
-                    </header>
-                    <div class="post_img">
-                        <img class="post-img-top" src="http://127.0.0.1:3000/img/{{ post.photo }}" alt="Image">
-                    </div>
-                    <div class="post-footer">
-                        <div class="likes_dislikes_section">
-                            <div class="likes_comment_post"><img class="" src="{{ asset('images/like.png') }}"></img>
-                        </div>
-                        <p>{{ post.rating_publication.likes_count }}</p>
-                        <div class="dislikes_comment_post"><img class="" src="{{ asset('images/dislike.png') }}"></img>
-                    </div>
-                    <p>{{ post.rating_publication.dislikes_count }}</p>
-                </div>
-                <div class="post-body">
-                    <section class="description post-text">{{ post.description }}</section>
-                </div>
+							{% if days > 0 %}
+								●
+								{{ days|round }}
+								j
+							{% elseif hours > 0 %}
+								●
+								{{ hours|round }}
+								h
+							{% elseif minutes > 0 %}
+								●
+								{{ minutes|round }}
+								minute(s)
+							{% else %}
+								il y a quelques instants
+							{% endif %}
+						</p>
+						{% if app.session.get('role') == 'admin' %}
+							{% if post.is_locked %}
+								<label class="toggle">
+									<input type="checkbox" class="lockToggle" data-post-id='{{post.id}}'>
+									<span class="labels" data-on="Locked" data-off="Unlocked"></span>
+								</label>
+							{% else %}
+								<label class="toggle">
+									<input type="checkbox" class="lockToggle" data-post-id='{{post.id}}' checked>
+									<span class="labels" data-on="Locked" data-off="Unlocked"></span>
+								</label>
+							{% endif %}
+						{% endif %}
+					</header>
+					<div class="post_img">
+						<img class="post-img-top" src="http://127.0.0.1:3000/img/{{ post.photo }}" alt="Image">
+					</div>
+					<div class="post-footer">
+						<div class="likes_dislikes_section">
+							<div class="likes_comment_post"><img class="" src="{{ asset('images/like.png') }}"></img>
+						</div>
+						<p>{{ post.rating_publication.likes_count }}</p>
+						<div class="dislikes_comment_post"><img class="" src="{{ asset('images/dislike.png') }}"></img>
+					</div>
+					<p>{{ post.rating_publication.dislikes_count }}</p>
+				</div>
+				<div class="post-body">
+					<section class="description post-text">{{ post.description }}</section>
+				</div>
 
-                <button class="buttonShowPost" onclick="showPublication('{{ post.id }}')">
-                    <p class="more_infos mobile_format">Afficher tous les commentaires...</p>
-                </button>
-                {% for commentaire in post.commentaires | slice(0,1) %}
-                    <div class="commentaire post">
-                        <div class="post-body">
-                        <div class="comment-header">
-                            <p class="post_text_pseudo">{{ commentaire.auteur.pseudo }}</p>
-                            {% if app.session.get('isUserConnected') != NULL %}
-                            <div class="button_answer_accueil">
-                                <button class="reply-button" onclick="toggleReplyFormAccueil('{{ commentaire.id }}', event)">Répondre</button>
-                            </div>
-                            {% endif %}
-                        </div>
-                            <div class="post_content">
-                                <p class="post_text_content">{{ commentaire.contenu }}</p>
-                            </div>
-                            <p class="post_date">
-                            {% set timestamp = commentaire.date_comm.timestamp * 1000 %}
-                            {% set differenceEnMillisecondes = "now"|date("U") * 1000 - timestamp %}
-                            {% set seconds = differenceEnMillisecondes / 1000 %}
-                            {% set minutes = seconds / 60 %}
-                            {% set hours = minutes / 60 %}
-                            {% set days = hours / 24 %}
+				<button class="buttonShowPost" onclick="showPublication('{{ post.id }}')">
+					<p class="more_infos mobile_format">Afficher tous les commentaires...</p>
+				</button>
+				{% for commentaire in post.commentaires | slice(0,1) %}
+					<div class="commentaire post">
+						<div class="post-body">
+							<div class="comment-header">
+								<p class="post_text_pseudo">{{ commentaire.auteur.pseudo }}</p>
+								{% if app.session.get('isUserConnected') != NULL %}
+									<div class="button_answer_accueil">
+										<button class="reply-button" onclick="toggleReplyFormAccueil('{{ commentaire.id }}', event)">Répondre</button>
+									</div>
+								{% endif %}
+							</div>
+							<div class="post_content">
+								<p class="post_text_content">{{ commentaire.contenu }}</p>
+							</div>
+							<p class="post_date">
+								{% set timestamp = commentaire.date_comm.timestamp * 1000 %}
+								{% set differenceEnMillisecondes = "now"|date("U") * 1000 - timestamp %}
+								{% set seconds = differenceEnMillisecondes / 1000 %}
+								{% set minutes = seconds / 60 %}
+								{% set hours = minutes / 60 %}
+								{% set days = hours / 24 %}
 
-                            {% if days > 0 %}
-                                {{ days|round }} j
-                            {% elseif hours > 0 %}
-                                {{ hours|round }} h
-                            {% elseif minutes > 0 %}
-                                {{ minutes|round }} minute(s)
-                            {% else %}
-                                il y a quelques instants
-                            {% endif %}
-                            </p>
-                            <div class="like_dislike_post">
-                                {% if commentaire.rating_commentaire is not null %}
-                                    <div class="comment_like_post">
-                                        <img class="" src="{{ asset('images/like.png') }}">
-                                    </div>
-                                    <p>{{ commentaire.rating_commentaire.likes_count }}</p>
-                                    <div class="comment_dislike_post">
-                                        <img class="" src="{{ asset('images/dislike.png') }}">
-                                    </div>
-                                    <p>{{ commentaire.rating_commentaire.dislikes_count }}</p>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="reply-form" style="display: none;" id="reply-form-{{ commentaire.id }}">
-                            <form action="{{ path('api_create_comment_reply') }}" method="post" enctype="multipart/form-data">
-                                <textarea class="buttonReponsePost" id="commentReponse" name="contenu" placeholder="Votre réponse..." oninput="togglePublishButton()"></textarea>
-                                <input type="hidden" name="dateComm" value="{{ 'now'|date('Y-m-d H:i:s') }}">
-                                <input type="hidden" name="auteur_id" value="{{ app.session.get('auteur_id') }}">
-                                <input type="hidden" name="publication" value="{{ post.id }}">
-                                <input type="hidden" name="parentCommentId" value="{{ commentaire.id }}">
-                                <button id="publishButtonReponse" type="submit">Publier</button>
-                            </form>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% if app.session.get('isUserConnected') != NULL and not post.is_locked %}
-        <form action="{{ path('api_create_comment') }}" method="post" enctype="multipart/form-data">
-            <textarea class="buttonAddPost" id="commentTextareaAccueil" name="contenu" placeholder="Ajouter un commentaire..." oninput="togglePublishButton()"></textarea>
-            <input type="hidden" name="dateComm" value="{{ 'now'|date('Y-m-d H:i:s') }}">
-            <input type="hidden" name="auteur_id" value="{{ app.session.get('auteur_id') }}">
-            <input type="hidden" name="publication" value="{{ post.id }}">
-            <input type="hidden" name="parentCommentId" value="0">
-            <button id="publishButtonAccueil" type="submit">Publier</button>
-        </form>
-        {% endif %}
-        
-    </div>
-    <div id="popupPublication" class="popupPublication">
-        <div class="popup-content-publication">
-            <div class="close" onclick="closePopupPublication()">
-                <img class="close_icon" src="{{ asset('images/close.png') }}">
-            </div>
-            <div class="left-content-popup">
-                <img class="post-img-top" src="http://127.0.0.1:3000/img/{{ post.photo }}" alt="Image">
-            </div>
-            <div class="right-content-popup">
-                <div class="avatar_pseudo_user_popup">
-                    <a href="/profil"><img class="avatar_user" src="http://127.0.0.1:3000/img/{{ post.auteur.avatar }}" alt=""></a>
-                    <div class="pseudo_user_popup">{{ post.auteur.pseudo }}</div>
-                </div>
-                <div class="content_post_popup">
-                    <p>{{ post.description }}</p>
-                </div>
-                <div class="date_post_popup">
-                    <p class="date_post">Publié le
-                        {{ post.date_publication.timestamp | date('Y-m-d H:i:s') }}</p>
-                </div>
-                <section class="commentaires_popup">
-                {% if app.session.get('isUserConnected') != NULL %}
-                    <div class="commentaires-popup user-connected">
-                {% else %}
-                    <div class="commentaires-popup user-not-connected">
-                {% endif %}
-                    {% for commentaire in post.commentaires %}
-                        <div class="commentaire post">
-                            <div class="post_body_popup">
-                                <p class="pseudo_comment_popup">{{ commentaire.auteur.pseudo }}</p>
-                                <p class="comment_popup">{{ commentaire.contenu }}</p>
-                                <div class="like_dislike_popup">
-                                    {% if commentaire.rating_commentaire is not null %}
-                                        <div class="like_popup"><img class="img_like_popup" src="{{ asset('images/like.png') }}"></img>
-                                    </div>
-                                    <p>{{ commentaire.rating_commentaire.likes_count }}</p>
-                                    <div class="dislike_popup"><img class="img_dislike_popup" src="{{ asset('images/dislike.png') }}"></img>
-                                </div>
-                                <p>{{ commentaire.rating_commentaire.dislikes_count }}</p>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </section>
-        {% if app.session.get('isUserConnected') != NULL and not post.is_locked %}
-        <form action="{{ path('api_create_comment') }}" method="post" enctype="multipart/form-data">
-            <textarea class="buttonAddPost" id="commentTextareaAccueil" name="contenu" placeholder="Ajouter un commentaire..." oninput="togglePublishButton()"></textarea>
-            <input type="hidden" name="dateComm" value="{{ 'now'|date('Y-m-d H:i:s') }}">
-            <input type="hidden" name="auteur_id" value="{{ app.session.get('auteur_id') }}">
-            <input type="hidden" name="publication" value="{{ post.id }}">
-            <input type="hidden" name="parentCommentId" value="0">
-            <button id="publishButtonAccueil" type="submit">Publier</button>
-        </form>
-        {% endif %}
-    </div>
-</div></div>{% if 'role' == 'admin' %}
-<div class="post-footer">
-    <section class="admin-tab"><!-- Add your admin content here --></section>
-</div>{% endif %}</article></div></div></div>{% endfor %}{% endblock %}
+								{% if days > 0 %}
+									{{ days|round }}
+									j
+								{% elseif hours > 0 %}
+									{{ hours|round }}
+									h
+								{% elseif minutes > 0 %}
+									{{ minutes|round }}
+									minute(s)
+								{% else %}
+									il y a quelques instants
+								{% endif %}
+							</p>
+							<div class="like_dislike_post">
+								{% if commentaire.rating_commentaire is not null %}
+									<div class="comment_like_post">
+										<img class="" src="{{ asset('images/like.png') }}">
+									</div>
+									<p>{{ commentaire.rating_commentaire.likes_count }}</p>
+									<div class="comment_dislike_post">
+										<img class="" src="{{ asset('images/dislike.png') }}">
+									</div>
+									<p>{{ commentaire.rating_commentaire.dislikes_count }}</p>
+								{% endif %}
+							</div>
+						</div>
+						<div class="reply-form" style="display: none;" id="reply-form-{{ commentaire.id }}">
+							<form action="{{ path('api_create_comment_reply') }}" method="post" enctype="multipart/form-data">
+								<textarea class="buttonReponsePost" id="commentReponse" name="contenu" placeholder="Votre réponse..." oninput="togglePublishButton()"></textarea>
+								<input type="hidden" name="dateComm" value="{{ 'now'|date('Y-m-d H:i:s') }}">
+								<input type="hidden" name="auteur_id" value="{{ app.session.get('auteur_id') }}">
+								<input type="hidden" name="publication" value="{{ post.id }}">
+								<input type="hidden" name="parentCommentId" value="{{ commentaire.id }}">
+								<button id="publishButtonReponse" type="submit">Publier</button>
+							</form>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+			{% if app.session.get('isUserConnected') != NULL and not post.is_locked %}
+				<form action="{{ path('api_create_comment') }}" method="post" enctype="multipart/form-data">
+					<textarea class="buttonAddPost" id="commentTextareaAccueil" name="contenu" placeholder="Ajouter un commentaire..." oninput="togglePublishButton()"></textarea>
+					<input type="hidden" name="dateComm" value="{{ 'now'|date('Y-m-d H:i:s') }}">
+					<input type="hidden" name="auteur_id" value="{{ app.session.get('auteur_id') }}">
+					<input type="hidden" name="publication" value="{{ post.id }}">
+					<input type="hidden" name="parentCommentId" value="0">
+					<button id="publishButtonAccueil" type="submit">Publier</button>
+				</form>
+			{% endif %}
+
+		</div>
+		<div id="popupPublication" class="popupPublication">
+			<div class="popup-content-publication">
+				<div class="close" onclick="closePopupPublication()">
+					<img class="close_icon" src="{{ asset('images/close.png') }}">
+				</div>
+				<div class="left-content-popup">
+					<img class="post-img-top" src="http://127.0.0.1:3000/img/{{ post.photo }}" alt="Image">
+				</div>
+				<div class="right-content-popup">
+					<div class="avatar_pseudo_user_popup">
+						<a href="/profil"><img class="avatar_user" src="http://127.0.0.1:3000/img/{{ post.auteur.avatar }}" alt=""></a>
+						<div class="pseudo_user_popup">{{ post.auteur.pseudo }}</div>
+					</div>
+					<div class="content_post_popup">
+						<p>{{ post.description }}</p>
+					</div>
+					<div class="date_post_popup">
+						<p class="date_post">Publié le
+							{{ post.date_publication.timestamp | date('Y-m-d H:i:s') }}</p>
+					</div>
+					<section class="commentaires_popup">
+						{% if app.session.get('isUserConnected') != NULL %}
+							<div class="commentaires-popup user-connected">
+							{% else %}
+								<div class="commentaires-popup user-not-connected">
+								{% endif %}
+								{% for commentaire in post.commentaires %}
+									<div class="commentaire post">
+										<div class="post_body_popup">
+											<p class="pseudo_comment_popup">{{ commentaire.auteur.pseudo }}</p>
+											<p class="comment_popup">{{ commentaire.contenu }}</p>
+											<div class="like_dislike_popup">
+												{% if commentaire.rating_commentaire is not null %}
+													<div class="like_popup"><img class="img_like_popup" src="{{ asset('images/like.png') }}"></img>
+												</div>
+												<p>{{ commentaire.rating_commentaire.likes_count }}</p>
+												<div class="dislike_popup"><img class="img_dislike_popup" src="{{ asset('images/dislike.png') }}"></img>
+											</div>
+											<p>{{ commentaire.rating_commentaire.dislikes_count }}</p>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+					</section>
+					{% if app.session.get('isUserConnected') != NULL and not post.is_locked %}
+						<form action="{{ path('api_create_comment') }}" method="post" enctype="multipart/form-data">
+							<textarea class="buttonAddPost" id="commentTextareaAccueil" name="contenu" placeholder="Ajouter un commentaire..." oninput="togglePublishButton()"></textarea>
+							<input type="hidden" name="dateComm" value="{{ 'now'|date('Y-m-d H:i:s') }}">
+							<input type="hidden" name="auteur_id" value="{{ app.session.get('auteur_id') }}">
+							<input type="hidden" name="publication" value="{{ post.id }}">
+							<input type="hidden" name="parentCommentId" value="0">
+							<button id="publishButtonAccueil" type="submit">Publier</button>
+						</form>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		{% if 'role' == 'admin' %}
+			<div class="post-footer">
+				<section class="admin-tab"><!-- Add your admin content here --></section>
+			</div>
+		{% endif %}
+	</article>
+</div></div></div>{% endfor %}{% endblock %}

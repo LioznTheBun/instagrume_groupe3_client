@@ -11,19 +11,105 @@
 
 .pseudo_profil {
     font-weight: bold;
-    font-size: 25px;
+    font-size: 30px;
+    color: #eeae5a;
 }
 
 .publications_title {
     font-size: 20px;
     font-weight: bold;
     text-align: center;
+    color: #009933;
 }
 
-img {
-    width: 150px;
-    height: 150px;
+.left_content_profil {
+    position: relative;
+    display: inline-block;
 }
+
+.left_content_profil:hover::after {
+    content: "Modifier mon avatar";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 5px;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.avatar {
+    width: 300px;
+    height: 300px;
+    border-radius: 100%;
+    transition: filter 0.5s ease;
+}
+
+.left_content_profil:hover .avatar {
+    filter: blur(2px);
+}
+
+.publications_card_profil {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.avatar:hover {
+    cursor: pointer;
+}
+
+.img_post_profil img {
+    width: 500px;
+    height: 500px;
+}
+
+.edit_icon_div img {
+    width: 35px;
+    height: 35px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.delete_icon_div img {
+    width: 35px;
+    height: 35px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.edit_delete_icon {
+    display: flex;
+}
+
+.edit_delete_icon img:hover {
+    transform: scale(1.2);
+}
+
+.edit_delete_icon img {
+    transition: transform 0.3s ease;
+}
+
+.publications_main_card_profil {
+    display: inline-block;
+    margin-right: 10px;
+}
+
 
 .container {
     margin-left: 30%;
@@ -44,6 +130,7 @@ img {
     .right_content_profil {
         margin-left: -100px;
     }
+
     .publications_title {
         width: fit-content;
         text-align: center;

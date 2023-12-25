@@ -12,7 +12,6 @@
 
 {% block body %}
 	<main class="mur_user">
-		<h1>User Details</h1>
 		{% if userDetails.user is defined %}
 			<div class="user-details">
 				<p class="pseudo_mur">{{ userDetails.user.pseudo }}</p>
@@ -22,7 +21,6 @@
 			</div>
 
 			<div class="publications-section">
-				<h2 class="post_mur">Publications</h2>
 				{% if userDetails.publications is defined and userDetails.publications|length > 0 %}
 					<ul class="publication-list">
 						{% for publication in userDetails.publications %}
@@ -31,18 +29,24 @@
 									<img src="http://127.0.0.1:3000/img/{{ publication.photo }}" alt="Publication Image">
 								</div>
 								<div class="publication-description">{{ publication.description }}</div>
-							</li>
-						{% endfor %}
-					</ul>
-				{% endif %}
-			</div>
-			<div class="commentaires-section">
-				<h2 class="comm_mur">Commentaires</h2>
-				{% if userDetails.commentaires is defined and userDetails.commentaires|length > 0 %}
-					<ul class="commentaire-list">
-						{% for commentaire in userDetails.commentaires %}
-							<li class="commentaire-item">
-								<div class="commentaire-contenu">{{ commentaire.contenu }}</div>
+
+								{% if publication.commentaires is defined and publication.commentaires|length > 0 %}
+									<div class="commentaires-section">
+										<ul class="commentaire-list">
+											{% for commentaire in publication.commentaires %}
+												<li class="commentaire-item">
+													{% if commentaire.auteur is defined and commentaire.auteur.pseudo is defined %}
+														<div class="commentaire-auteur">{{ commentaire.auteur.pseudo }}
+														</div>
+													{% else %}
+														<div class="commentaire-auteur">Auteur Inconnu :</div>
+													{% endif %}
+													<div class="commentaire-contenu">{{ commentaire.contenu }}</div>
+												</li>
+											{% endfor %}
+										</ul>
+									</div>
+								{% endif %}
 							</li>
 						{% endfor %}
 					</ul>

@@ -1,43 +1,84 @@
 .mur_user {
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+}
+
+.user-details {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .pseudo_mur {
-    text-align: center;
-}
-
-.user-avatar {
-    display: flex;
-    justify-content: center;
+    font-weight: bold;
+    font-size: 30px;
 }
 
 .user-avatar img {
-    width: 300px;
-    height: 300px;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 5px solid #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.post_mur {
+.publications-section {
+    width: 100%;
     text-align: center;
 }
 
-.publication-photo {
+.publication-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
 }
 
+.publication-item {
+    margin: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    width: 400px;
+    background-color: #fff;
+}
+
 .publication-photo img {
-    width: 300px;
-    height: 300px;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
 }
 
 .publication-description {
-    text-align: center;
+    padding: 10px;
 }
 
-.comm_mur {
-    text-align: center;
+.commentaires-section {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.commentaire-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.commentaire-item {
+    margin: 10px 0;
+}
+
+.commentaire-auteur {
+    font-weight: bold;
+    margin-bottom: 5px;
 }
 
 .commentaire-contenu {
-    text-align: center;
+    margin-left: 20px;
 }

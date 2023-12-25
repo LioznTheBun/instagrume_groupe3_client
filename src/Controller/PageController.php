@@ -192,6 +192,20 @@ class PageController extends AbstractController
         return $this->render('profil.html.twig', ['user' => $user, 'page' => 'profil']);
     }
 
+    #[Route('/user/{id}/details', methods: ['GET'], name: 'display_user_details')]
+    public function displayUserDetails($id, Request $request)
+    {
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+
+        $response = $this->apiLinker->getData('/user/' . $id . '/details', $token);
+
+        $userDetails = json_decode($response);
+
+
+        return $this->render('user_details.html.twig', ['page' => 'detailsUser', 'userDetails' => $userDetails]);
+    }
+
     #[Route('/publications/{id}', methods: ['GET'], name: 'display_publication_by_id')]
     public function displayPublicationsByIdPage($id, Request $request)
     {
@@ -248,12 +262,6 @@ class PageController extends AbstractController
         $session->set('role', $role);
 
         return $this->render('accueil.html.twig', ['page' => 'accueil', 'posts' => $arrayPosts]);
-    }
-
-    #[Route('/publications', name: 'update_description', methods: ['PUT'])]
-    public function updateDescription(Request $request)
-    {
-
     }
 
     #[Route('/users', methods: ['GET'], condition: "service('route_checker').checkAdmin(request)")]

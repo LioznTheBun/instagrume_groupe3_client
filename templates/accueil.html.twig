@@ -59,7 +59,7 @@
 			<div class="col-md-8 mt-3">
 				<article class="post mb-3" data-post-id="{{ post.id }}">
 					<header class="post-header">
-						<a href="/">
+						<a href="{{ path('display_user_details', {'id': post.auteur.id}) }}">
 							<img class="avatar_user" src="http://127.0.0.1:3000/img/{{ post.auteur.avatar }}" alt="">
 						</a>
 						<p class="pseudo_user">{{ post.auteur.pseudo }}</p>

@@ -1,0 +1,43 @@
+.mur_user {
+    height: 100%;
+}
+
+.pseudo_mur {
+    text-align: center;
+}
+
+.user-avatar {
+    display: flex;
+    justify-content: center;
+}
+
+.user-avatar img {
+    width: 300px;
+    height: 300px;
+}
+
+.post_mur {
+    text-align: center;
+}
+
+.publication-photo {
+    display: flex;
+    justify-content: center;
+}
+
+.publication-photo img {
+    width: 300px;
+    height: 300px;
+}
+
+.publication-description {
+    text-align: center;
+}
+
+.comm_mur {
+    text-align: center;
+}
+
+.commentaire-contenu {
+    text-align: center;
+}

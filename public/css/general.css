@@ -83,7 +83,10 @@ body {
 .dark-mode .search_button img,
 .dark-mode .button_add_post img,
 .dark-mode .likes_comment_post img,
-.dark-mode .dislikes_comment_post img{
+.dark-mode .dislikes_comment_post img,
+.dark-mode .comment_like_post img,
+.dark-mode .comment_dislike_post img,
+.dark-mode .delete_icon{
 	filter: invert(100%);
 }
 
@@ -99,6 +102,7 @@ body {
 	color: #bbb;
 }
 
+.dark-mode .container,
 .dark-mode table,
 .dark-mode th,
 .dark-mode td {

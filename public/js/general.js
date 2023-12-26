@@ -22,7 +22,7 @@ function toggleDarkMode() {
 		element.classList.toggle('dark-mode', isDarkModeEnabled);
 	});
 
-	const table = document.querySelector('table');
+	const table = document.querySelector('.container');
 	table.classList.toggle('dark-mode', isDarkModeEnabled);
 
 	const imgElement = document.querySelector('.search_button img');
@@ -34,13 +34,8 @@ function toggleDarkMode() {
 	const replyButton = document.querySelector('.reply-button');
 	replyButton.classList.toggle('dark-mode', isDarkModeEnabled);
 
-	const tableLike = document.querySelectorAll('.likes_comment_post img');
-	tableLike.forEach((element) => {
-		element.style.filter = isDarkModeEnabled ? 'invert(100%)' : 'none';
-	});
-
-	const tableDislike = document.querySelectorAll('.dislikes_comment_post img');
-	tableDislike.forEach((element) => {
+	const tableBoutonRating= document.querySelectorAll('.likes_comment_post img, .dislikes_comment_post img, .comment_like_post img, .comment_dislike_post img, delete_icon');
+	tableBoutonRating.forEach((element) => {
 		element.style.filter = isDarkModeEnabled ? 'invert(100%)' : 'none';
 	});
 

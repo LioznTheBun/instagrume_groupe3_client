@@ -115,6 +115,14 @@ class PageController extends AbstractController
         $response = $this->apiLinker->deleteData('/publications/' . $id, $token);
         return $this->redirect('/profil');
     }
+    #[Route('/commentaires/{id}', methods: ['DELETE'], name: 'delete_comment')]
+    public function deleteCommentaire($id, Request $request)
+    {
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+        $response = $this->apiLinker->deleteData('/commentaires/' . $id, $token);
+        return $this->redirect('/profil');
+    }
     #[Route('/profil/avatar', methods: ['POST'], name: 'upload_avatar')]
     public function uploadAvatar(Request $request): Response
     {
@@ -132,25 +140,28 @@ class PageController extends AbstractController
         return new Response('Error uploading avatar', 400);
     }
 
-    /*#[Route('/publications', methods: ['POST'])]
+    #[Route('/createPublication', methods: ['POST'])]
     public function createPost(Request $request)
     {
         $session = $request->getSession();
         $token = $session->get('token-session');
+        
+        $data = [
+            "description" => $request->request->get('description'),
+            "photo" => base64_encode(file_get_contents($request->files->get('photo')->getPathName())),
+            "datePublication" => $request->request->get('datePublication'),
+            "isLocked" => false,
+        ];
 
-        $dataDescription = htmlspecialchars($_POST["description"]);
+        $response = $this->apiLinker->getData('/myself', $token);
+        $user = json_decode($response);
 
-        //pour gérer les images?? pas fonctionnel
-        //$photoFile = $request->files->get('photo');
+        $data['auteur'] = $user->pseudo;
 
-        //$photoPath = '/public/images/' . $photoFile->getClientOriginalName();
-        //$photoFile->move('/public/images/', $photoFile->getClientOriginalName());
-
-        $data = $this->jsonConverter->encodeToJson(["description" => $dataDescription, "photo" => $photoPath]);
-        $response = $this->apiLinker->postData('/publications', $data, $token);
+        $response = $this->apiLinker->postData('/createPublication', json_encode($data), $token);
 
         return $this->redirect('/');
-    }*/
+    }
 
     #[Route('/inscription', methods: ['GET'])]
     public function displayInscriptionPage()

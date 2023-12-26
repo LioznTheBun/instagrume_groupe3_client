@@ -27,6 +27,7 @@
 		</button>
 	</form>
 </div>
+
 {% if app.session.get('role') != NULL %}
 	<div class="button_creation">
 		<button id="createPublicationBtn" class="button_add_post" onclick="showPopup()">
@@ -38,11 +39,14 @@
 			<div class="close" onclick="closePopup()">
 				<img class="close_icon" src="{{ asset('images/close.png') }}"/>
 			</div>
-			<form action="/publications" method="post" enctype="multipart/form-data">
+			<form action="/createPublication" method="post" enctype="multipart/form-data">
 				<div class="description_popup">
 					<label for="description" class="form-label">
-						<input id="description" class="form-control" type="text" name="description" placeholder="À quoi pensez-vous ?">
+						<input id="description" class="form-control" type="text" name="description" placeholder="À quoi pensez-vous?">
 					</label>
+					<input type="hidden" name="datePublication" value="{{ 'now'|date('Y-m-d H:i:s') }}">
+					<input type="hidden" name="isLocked" value="false">
+					<input type="hidden" name="auteur" value="">
 				</div>
 				<label for="photo" class="form-label">Sélectionnez une image:
 					<input id="photo" type="file" name="photo">
@@ -71,23 +75,21 @@
 							{% set hours = minutes / 60 %}
 							{% set days = hours / 24 %}
 
-							{% if days > 0 %}
-								●
-								{{ days|round }}
-								j
-							{% elseif hours > 0 %}
-								●
-								{{ hours|round }}
-								h
-							{% elseif minutes > 0 %}
-								●
-								{{ minutes|round }}
-								minute(s)
+							{% if days >= 1 %}
+								● {{ days|round }} j
+							{% elseif hours >= 1 %}
+								● {{ hours|round }} h
+							{% elseif minutes >= 1 %}
+								● {{ minutes|round }} min
 							{% else %}
 								il y a quelques instants
 							{% endif %}
 						</p>
 						{% if app.session.get('role') == 'admin' %}
+							<div class="delete_icon_post">
+								<div class="delete_icon__post_div">
+									<img class="delete_icon" src="{{ asset('images/corbeille.png') }}" onclick="deletePublication('{{ post.id }}', '{{ path('delete_publication', {'id': post.id}) }}')">								</div>
+							</div>
 							{% if post.is_locked %}
 								<label class="toggle">
 									<input type="checkbox" class="lockToggle" data-post-id='{{post.id}}'>
@@ -167,6 +169,12 @@
 									<p>{{ commentaire.rating_commentaire.dislikes_count }}</p>
 								{% endif %}
 							</div>
+							{% if app.session.get('role') == 'admin' %}
+							<div class="delete_icon">
+								<div class="delete_icon_div">
+									<img class="delete_icon" src="{{ asset('images/corbeille.png') }}" onclick="deleteComm('{{ commentaire.id }}', '{{ path('delete_comment', {'id': commentaire.id}) }}')">								</div>
+							</div>
+							{% endif %}
 						</div>
 						<div class="reply-form" style="display: none;" id="reply-form-{{ commentaire.id }}">
 							<form action="{{ path('api_create_comment_reply') }}" method="post" enctype="multipart/form-data">
@@ -191,7 +199,6 @@
 					<button id="publishButtonAccueil" type="submit">Publier</button>
 				</form>
 			{% endif %}
-
 		</div>
 		<div id="popupPublication" class="popupPublication">
 			<div class="popup-content-publication">
@@ -211,7 +218,22 @@
 					</div>
 					<div class="date_post_popup">
 						<p class="date_post">Publié le
-							{{ post.date_publication.timestamp | date('Y-m-d H:i:s') }}</p>
+							{% set timestamp = post.date_publication.timestamp * 1000 %}
+							{% set differenceEnMillisecondes = "now"|date("U") * 1000 - timestamp %}
+							{% set seconds = differenceEnMillisecondes / 1000 %}
+							{% set minutes = seconds / 60 %}
+							{% set hours = minutes / 60 %}
+							{% set days = hours / 24 %}
+
+							{% if days >= 1 %}
+								● {{ days|round }} j
+							{% elseif hours >= 1 %}
+								● {{ hours|round }} h
+							{% elseif minutes >= 1 %}
+								● {{ minutes|round }} minute(s)
+							{% else %}
+								il y a quelques instants
+							{% endif %}</p>
 					</div>
 					<section class="commentaires_popup">
 						{% if app.session.get('isUserConnected') != NULL %}
@@ -232,6 +254,13 @@
 												<div class="dislike_popup"><img class="img_dislike_popup" src="{{ asset('images/dislike.png') }}"></img>
 											</div>
 											<p>{{ commentaire.rating_commentaire.dislikes_count }}</p>
+										{% endif %}
+										 {% if app.session.get('role') == 'admin' %}
+											<div class="delete_icon">
+												<div class="delete_icon_div">
+													<img class="delete_icon" src="{{ asset('images/corbeille.png') }}" onclick="deleteComm('{{ commentaire.id }}', '{{ path('delete_comment', {'id': commentaire.id}) }}')">
+												</div>
+											</div>
 										{% endif %}
 									</div>
 								</div>

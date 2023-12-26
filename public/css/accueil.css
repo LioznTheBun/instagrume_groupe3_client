@@ -89,6 +89,21 @@
     display: flex;
 }
 
+.delete_icon_div img {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+.delete_icon_popup img {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+.delete_icon__post_div img {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
 .popupPublication {
     display: none;
     position: fixed;

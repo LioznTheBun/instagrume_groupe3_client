@@ -24,7 +24,9 @@ function showPopup() {
 }
 
 function formatCommentDate(timestamp) {
-    var differenceEnMillisecondes = new Date() - new Date(timestamp);
+    var datePublication = new Date(timestamp);
+    var now = new Date();
+    var differenceEnMillisecondes = now - datePublication;
     var seconds = Math.floor(differenceEnMillisecondes / 1000);
     var minutes = Math.floor(seconds / 60);
     var hours = Math.floor(minutes / 60);
@@ -100,6 +102,9 @@ function showPublication(postId) {
                         commentairesHtml += '<p>' + commentaire.rating_commentaire.dislikes_count + '</p>';
                     }
                     commentairesHtml += '</div>';
+                    commentairesHtml += '<div class="delete_icon_popup" onclick=""';
+                    commentairesHtml += '<img class="img_delete_popup" src="images/corbeille.png">';
+                    commentairesHtml += '</div>';
 
                     commentairesHtml += '<div class="button_answer_popup">';
                     commentairesHtml += '<button class="reply-button" onclick="toggleReplyForm(\'' + commentaire.id + '\', event)">Répondre</button>';
@@ -136,21 +141,6 @@ function closePopupPublication() {
 
 function closePopup() {
     document.getElementById('popup').style.display = 'none';
-}
-document.getElementById('imageButton').addEventListener('click', function () {
-    document.getElementById('uploadImage').click();
-});
-function resetPopup() {
-    document.getElementById("uploadPreview").src = '';
-    document.getElementById("uploadImage").value = '';
-}
-function PreviewImage() {
-    var oFReader = new FileReader();
-    oFReader.readAsDataURL(document.getElementById("uploadImage").files[0]);
-
-    oFReader.onload = function (oFREvent) {
-        document.getElementById("uploadPreview").src = oFREvent.target.result;
-    };
 }
 
 function createPublication() {
@@ -202,7 +192,7 @@ function toggleReplyForm(commentId, event) {
 }
 
 function toggleReplyFormAccueil(commentId, event) {
-    var replyFormId = 'reply-form-' + commentId;  // Utilisez le même préfixe
+    var replyFormId = 'reply-form-' + commentId;
     var replyForm = document.getElementById(replyFormId);
 
     if (replyForm && (replyForm.style.display === 'none' || replyForm.style.display === '')) {
@@ -212,4 +202,50 @@ function toggleReplyFormAccueil(commentId, event) {
     }
 
     event.stopPropagation();
+}
+
+function deleteComm(commentaireId, deleteUrl) {
+    if (confirm('Voulez-vous vraiment supprimer ce commentaire ?')) {
+        fetch(deleteUrl, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.reload();            
+            } else {
+                console.error('Echec de la suppression du commentaire');
+            }
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('Erreur :', error);
+            window.location.reload();      
+        });
+    }
+}
+
+function deletePublication(publicationId, deleteUrl) {
+    if (confirm('Voulez-vous vraiment supprimer cette publication ?')) {
+        fetch(deleteUrl, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.reload();            
+            } else {
+                console.error('Echec de la suppression de la publication');
+            }
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('Erreur :', error);
+            window.location.reload();      
+        });
+    }
 }

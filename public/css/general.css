@@ -8,13 +8,13 @@
 	height: var(--height);
 	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
 	cursor: pointer;
-  }
+}
 
-  .toggle input {
+.toggle input {
 	display: none;
-  }
+}
 
-  .toggle .labels {
+.toggle .labels {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -23,9 +23,9 @@
 	font-size: 12px;
 	font-family: sans-serif;
 	transition: all 0.4s ease-in-out;
-  }
+}
 
-  .toggle .labels::after {
+.toggle .labels::after {
 	content: attr(data-on);
 	position: absolute;
 	display: flex;
@@ -39,9 +39,9 @@
 	background-color: #f19999;
 	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
 	transition: all 0.4s ease-in-out;
-  }
+}
 
-  .toggle .labels::before {
+.toggle .labels::before {
 	content: attr(data-off);
 	position: absolute;
 	display: flex;
@@ -57,31 +57,39 @@
 	opacity: 0;
 	text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.4);
 	transition: all 0.4s ease-in-out;
-  }
+}
 
-  .toggle input:checked~.labels::after {
+.toggle input:checked~.labels::after {
 	/* flip 180deg */
 	transform: rotateY(180deg);
 	opacity: 0;
-  }
+}
 
-  .toggle input:checked~.labels::before {
+.toggle input:checked~.labels::before {
 	transform: rotateY(180deg) scale(-1, 1);
 	opacity: 1;
-  }
+}
 
-  body {
+body {
 	background-color: white;
 	color: black;
-  }
-  
-  .dark-mode {
+}
+
+.dark-mode {
 	background-color: black;
 	color: white;
-  }
+}
 
-  .dark-mode input,
-  .dark-mode textarea{
+.dark-mode .search_button img,
+.dark-mode .button_add_post img,
+.dark-mode .likes_comment_post img,
+.dark-mode .dislikes_comment_post img{
+	filter: invert(100%);
+}
+
+.dark-mode input,
+.dark-mode textarea,
+.dark-mode .reply-button {
 	background-color: #555;
 	color: #fff;
 	border: 1px solid #777;

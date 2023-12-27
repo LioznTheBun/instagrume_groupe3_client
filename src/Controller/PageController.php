@@ -107,6 +107,36 @@ class PageController extends AbstractController
 
         return $this->redirect('/profil');
     }
+
+    #[Route('/commentaires', methods: ['POST'], name: 'edit_comment')]
+    public function editComment(Request $request)
+    {
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+        $dataIdComm = htmlspecialchars($_POST["id"]);
+        $dataDescription = htmlspecialchars($request->request->get("description"));
+
+        $data = $this->jsonConverter->encodeToJson(["id" => $dataIdComm, "description" => $dataDescription]);
+
+        $response = $this->apiLinker->putData('/commentaires', $data, $token);
+
+        return $this->redirect('/profil');
+    }
+    #[Route('/selfCommentaires/{id}', methods: ['POST'], name: 'edit_self_comment')]
+    public function editSelfComment(Request $request)
+    {
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+        $dataIdComm = htmlspecialchars($request->request->get("id"));
+        $dataContenu = htmlspecialchars($request->request->get("contenu"));
+
+        $data = $this->jsonConverter->encodeToJson(["id" => $dataIdComm, "contenu" => $dataContenu]);
+
+        $response = $this->apiLinker->postData('/editComment', $data, $token);
+
+        return $this->redirect('/');
+    }
+
     #[Route('/publications/{id}', methods: ['DELETE'], name: 'delete_publication')]
     public function deletePublication($id, Request $request)
     {
@@ -123,21 +153,33 @@ class PageController extends AbstractController
         $response = $this->apiLinker->deleteData('/commentaires/' . $id, $token);
         return $this->redirect('/profil');
     }
-    #[Route('/profil/avatar', methods: ['POST'], name: 'upload_avatar')]
-    public function uploadAvatar(Request $request): Response
+
+    #[Route('/deleteComment/{id}', methods: ['DELETE'], name: 'delete_self_comment')]
+    public function deleteSelfCommentaire($id, Request $request)
     {
-        $user = $this->getUser();
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+        $response = $this->apiLinker->deleteData('/commentaires/' . $id, $token);
+        return $this->redirect('/');
+    }
+
+    #[Route('/profil/avatar', methods: ['POST'], name: 'upload_avatar')]
+    public function uploadAvatar(Request $request)
+    {
+        $session = $request->getSession();
+        $token = $session->get('token-session');
         $file = $request->files->get('avatar');
+        $dataId = $request->request->get('id');
 
-        if ($file) {
-            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
-            $file->move($this->getParameter('avatar_directory'), $fileName);
-            $user->setAvatar($fileName);
+        $fileData = file_get_contents($file->getPathName());
+        $base64 = base64_encode($fileData);
+        $data = $this->jsonConverter->encodeToJson([
+            'avatar' => $base64,
+            'id' => $dataId
+        ]);
 
-            return $this->redirectToRoute('profil');
-        }
-
-        return new Response('Error uploading avatar', 400);
+        $response = $this->apiLinker->putData('/changeAvatar', $data, $token);
+        return $this->redirect('/profil');
     }
 
     #[Route('/createPublication', methods: ['POST'])]

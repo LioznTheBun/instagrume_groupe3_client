@@ -84,8 +84,10 @@ function showPublication(postId) {
                 document.querySelector('.date_post_popup').innerHTML = '<p class="date_post">' + formattedDate + '</p>';
 
                 var commentairesHtml = '';
+                var userId = parseInt(document.getElementById('id-container').getAttribute('data-current-user'), 10);
                 for (var i = 0; i < publicationDetails.commentaires.length; i++) {
                     var commentaire = publicationDetails.commentaires[i];
+                    var isCurrentUserComment = commentaire.auteur.id === userId;
                     commentairesHtml += '<div class="commentaire post">';
                     commentairesHtml += '<div class="post_body_popup">';
                     commentairesHtml += '<p class="pseudo_comment_popup">' + commentaire.auteur.pseudo + '</p>';
@@ -102,14 +104,32 @@ function showPublication(postId) {
                         commentairesHtml += '<p>' + commentaire.rating_commentaire.dislikes_count + '</p>';
                     }
                     commentairesHtml += '</div>';
-                    commentairesHtml += '<div class="delete_icon_popup" onclick=""';
-                    commentairesHtml += '<img class="img_delete_popup" src="images/corbeille.png">';
-                    commentairesHtml += '</div>';
+
+                    if (isCurrentUserComment) {
+                        commentairesHtml += '<div class="delete_icon_popup" onclick="deleteComment(\'' + commentaire.id + '\')">';
+                        commentairesHtml += '<img class="img_delete_popup" src="images/corbeille.png">';
+                        commentairesHtml += '</div>';
+                    
+                        commentairesHtml += '<div class="edit_icon_popup" onclick="toggleEditCommentForm(\'' + commentaire.id + '\')">';
+                        commentairesHtml += '<img class="img_edit_popup" src="images/editer.png">';
+                        commentairesHtml += '</div>';
+                    }
 
                     commentairesHtml += '<div class="button_answer_popup">';
                     commentairesHtml += '<button class="reply-button" onclick="toggleReplyForm(\'' + commentaire.id + '\', event)">Répondre</button>';
                     commentairesHtml += '</div>';
                 
+
+                    
+                    commentairesHtml += '</div></div>';
+                    commentairesHtml += '<div class="edit-form" style="display: none;" id="edit-form-popup-' + commentaire.id + '">';
+                    commentairesHtml += '<form method="POST" action="/selfCommentaires/' + commentaire.id + '" class="form_popup_comm">';
+                    commentairesHtml += '<label for="editComment">Modifier votre commentaire :</label>';
+                    commentairesHtml += '<input type="hidden" name="id" value="' + commentaire.id + '" required>';
+                    commentairesHtml += '<textarea name="contenu" required>' + commentaire.contenu + '</textarea>';
+                    commentairesHtml += '<button type="submit">Modifier</button>';
+                    commentairesHtml += '</form>';
+                    commentairesHtml += '</div>';
                     commentairesHtml += '<div class="reply-form" style="display: none;" id="reply-form-popup-' + commentaire.id + '">';
                     commentairesHtml += '<form action="/createCommReply" class="form_popup_comm" method="post" enctype="multipart/form-data">';
                     commentairesHtml += '<textarea class="buttonReponsePostPopup" id="commentReponse" name="contenu" placeholder="Votre réponse..." oninput="togglePublishButton()"></textarea>';
@@ -120,8 +140,6 @@ function showPublication(postId) {
                     commentairesHtml += '<button id="publishButtonReponse" type="submit">Publier</button>';
                     commentairesHtml += '</form>';
                     commentairesHtml += '</div>';
-                    
-                    commentairesHtml += '</div></div>';
                 }
                 document.querySelector('.commentaires_popup').innerHTML = commentairesHtml;
                 
@@ -190,22 +208,84 @@ function toggleReplyForm(commentId, event) {
 
     event.stopPropagation();
 }
+function toggleEditCommentFormPopup(commentId) {
+    var form = document.getElementById('edit-form-popup-' + commentId);
+    if (form.style.display === 'none') {
+        form.style.display = 'block';
+    } else {
+        form.style.display = 'none';
+    }
+}
 
 function toggleReplyFormAccueil(commentId, event) {
     var replyFormId = 'reply-form-' + commentId;
     var replyForm = document.getElementById(replyFormId);
 
-    if (replyForm && (replyForm.style.display === 'none' || replyForm.style.display === '')) {
-        replyForm.style.display = 'block';
-    } else if (replyForm) {
-        replyForm.style.display = 'none';
+    if (replyForm) {
+        if (replyForm.style.display === 'none' || replyForm.style.display === '') {
+            var pseudoToReply = document.querySelector('.post_text_pseudo[data-comment-id="' + commentId + '"]').textContent;
+            var commentTextarea = replyForm.querySelector('textarea[name="contenu"]');
+            commentTextarea.value = '@' + pseudoToReply + ' ';
+            replyForm.style.display = 'block';
+        } else {
+            replyForm.style.display = 'none';
+        }
     }
 
     event.stopPropagation();
 }
-
-function deleteComm(commentaireId, deleteUrl) {
+function deleteComment(commentId) {
     if (confirm('Voulez-vous vraiment supprimer ce commentaire ?')) {
+        var deleteUrl = '/commentaires/' + commentId;
+
+        fetch(deleteUrl, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.reload();       
+            } else {
+                console.error('Échec de la suppression du commentaire');
+                window.location.reload();       
+            }
+            window.location.reload();       
+        })
+        .catch(error => {
+            console.error('Erreur :', error);
+        });
+    }
+}
+function deleteComm(commentId) {
+    if (confirm('Voulez-vous vraiment supprimer ce commentaire ?')) {
+        var deleteUrl = '/commentaires/' + commentId;
+
+        fetch(deleteUrl, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.reload();       
+            } else {
+                console.error('Échec de la suppression du commentaire');
+                window.location.reload();       
+            }
+            window.location.reload();       
+        })
+        .catch(error => {
+            console.error('Erreur :', error);
+        });
+    }
+}
+function deleteSelfComment(commentId) {
+    if (confirm('Voulez-vous vraiment supprimer ce commentaire ?')) {
+        var deleteUrl = '/deleteComment/' + commentId;
+
         fetch(deleteUrl, {
             method: 'DELETE',
             headers: {
@@ -216,17 +296,15 @@ function deleteComm(commentaireId, deleteUrl) {
             if (response.ok) {
                 window.location.reload();            
             } else {
-                console.error('Echec de la suppression du commentaire');
+                window.location.reload();            
             }
-            window.location.reload();
+            window.location.reload();        
         })
         .catch(error => {
             console.error('Erreur :', error);
-            window.location.reload();      
         });
     }
 }
-
 function deletePublication(publicationId, deleteUrl) {
     if (confirm('Voulez-vous vraiment supprimer cette publication ?')) {
         fetch(deleteUrl, {
@@ -247,5 +325,23 @@ function deletePublication(publicationId, deleteUrl) {
             console.error('Erreur :', error);
             window.location.reload();      
         });
+    }
+}
+
+function toggleEditCommentAccueilForm(commentId) {
+    var form = document.getElementById('edit-comment-form-' + commentId);
+    if (form.style.display === 'none') {
+        form.style.display = 'block';
+    } else {
+        form.style.display = 'none';
+    }
+}
+
+function toggleEditCommentForm(commentId) {
+    var form = document.getElementById('edit-form-popup-' + commentId);
+    if (form.style.display === 'none') {
+        form.style.display = 'block';
+    } else {
+        form.style.display = 'none';
     }
 }

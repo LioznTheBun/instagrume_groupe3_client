@@ -27,7 +27,7 @@
 		</button>
 	</form>
 </div>
-
+<div id="id-container" data-current-user="{{ app.session.get('idUser') }}"></div>
 {% if app.session.get('role') != NULL %}
 	<div class="button_creation">
 		<button id="createPublicationBtn" class="button_add_post" onclick="showPopup()">
@@ -126,7 +126,7 @@
 					<div class="commentaire post">
 						<div class="post-body">
 							<div class="comment-header">
-								<p class="post_text_pseudo">{{ commentaire.auteur.pseudo }}</p>
+								<p class="post_text_pseudo" data-comment-id="{{ commentaire.id }}">{{ commentaire.auteur.pseudo }}</p>
 								{% if app.session.get('isUserConnected') != NULL %}
 									<div class="button_answer_accueil">
 										<button class="reply-button" onclick="toggleReplyFormAccueil('{{ commentaire.id }}', event)">Répondre</button>
@@ -169,12 +169,29 @@
 									<p>{{ commentaire.rating_commentaire.dislikes_count }}</p>
 								{% endif %}
 							</div>
+							{% if app.session.get('idUser') == commentaire.auteur.id %}
+								<div class="delete_icon_popup" onclick="deleteComm('{{ commentaire.id }}', '{{ path('delete_comment', {'id': commentaire.id}) }}')">
+									<img class="img_delete_popup" src="images/corbeille.png">
+								</div>
+								<div class="edit_icon_popup" onclick="toggleEditCommentAccueilForm('{{ commentaire.id }}')">
+									<img class="img_edit_popup" src="images/editer.png">
+								</div>
+							{% endif %}
 							{% if app.session.get('role') == 'admin' %}
 							<div class="delete_icon">
 								<div class="delete_icon_div">
-									<img class="delete_icon" src="{{ asset('images/corbeille.png') }}" onclick="deleteComm('{{ commentaire.id }}', '{{ path('delete_comment', {'id': commentaire.id}) }}')">								</div>
+									<img class="delete_icon" src="{{ asset('images/corbeille.png') }}" onclick="deleteComm('{{ commentaire.id }}', '{{ path('delete_comment', {'id': commentaire.id}) }}')">
+								</div>
 							</div>
 							{% endif %}
+						</div>
+						 <div class="edit-form" style="display: none;" id="edit-comment-form-{{ commentaire.id }}">
+							<form method="POST" action="{{ path('edit_self_comment', {'id': commentaire.id}) }}" class="form_popup_comm">
+								<label for="editComment">Modifier votre commentaire :</label>
+								<input type="hidden" name="id" value="{{ commentaire.id }}" required>
+								<textarea name="contenu" required>{{ commentaire.contenu }}</textarea>
+								<button type="submit">Modifier</button>
+							</form>
 						</div>
 						<div class="reply-form" style="display: none;" id="reply-form-{{ commentaire.id }}">
 							<form action="{{ path('api_create_comment_reply') }}" method="post" enctype="multipart/form-data">

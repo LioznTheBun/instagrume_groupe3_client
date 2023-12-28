@@ -11,18 +11,37 @@
 
 {% block body %}
     <main class="mur_user_search_bar">
-    {% if matchingUsers is defined and matchingUsers|length > 0 %}
-        <ul class="matching-users-list">
-            {% for user in matchingUsers %}
-                <li>
-                    <a href="{{ path('user_mur', {'pseudo': user.pseudo}) }}">
-                        {{ user.pseudo }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p class="no-matching-users">Aucun utilisateur trouvé.</p>
-    {% endif %}
-</main>
+        <div class="user-details">
+            <p class="pseudo_mur_search">{{userDetails.pseudo}}</p>
+            <div class="user-avatar">
+                <img class="avatar_user_mur" src="http://127.0.0.1:3000/img/{{ userDetails.avatar }}" alt="">
+            </div>
+        </div>
+        {% for publication in userDetails.publications %}
+            <li class="publication-item">
+                <div class="publication-photo">
+                    <img src="http://127.0.0.1:3000/img/{{ publication.photo }}" alt="Publication Image">
+                </div>
+                <div class="publication-description">{{ publication.description }}</div>
+
+                {% if publication.commentaires is defined and publication.commentaires|length > 0 %}
+                    <div class="commentaires-section">
+                        <ul class="commentaire-list">
+                            {% for commentaire in publication.commentaires %}
+                                <li class="commentaire-item">
+                                    {% if commentaire.auteur is defined and commentaire.auteur.pseudo is defined %}
+                                        <div class="commentaire-auteur">{{ commentaire.auteur.pseudo }}
+                                        </div>
+                                    {% else %}
+                                        <div class="commentaire-auteur">Auteur Inconnu :</div>
+                                    {% endif %}
+                                    <div class="commentaire-contenu">{{ commentaire.contenu }}</div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </main>
 {% endblock %}

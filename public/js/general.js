@@ -22,6 +22,9 @@ function toggleDarkMode() {
 		element.classList.toggle('dark-mode', isDarkModeEnabled);
 	});
 
+	const popup = document.querySelector('.right-content-popup');
+	popup.classList.toggle('dark-mode', isDarkModeEnabled);
+
 	const table = document.querySelector('.container');
 	table.classList.toggle('dark-mode', isDarkModeEnabled);
 
@@ -34,12 +37,11 @@ function toggleDarkMode() {
 	const replyButton = document.querySelector('.reply-button');
 	replyButton.classList.toggle('dark-mode', isDarkModeEnabled);
 
-	const tableBoutonRating= document.querySelectorAll('.likes_comment_post img, .dislikes_comment_post img, .comment_like_post img, .comment_dislike_post img, delete_icon');
+	const tableBoutonRating= document.querySelectorAll('.likes_comment_post img, .dislikes_comment_post img, .comment_like_post img, .comment_dislike_post img, delete_icon, .like_popup img, .dislike_popup img, .close_icon');
 	tableBoutonRating.forEach((element) => {
 		element.style.filter = isDarkModeEnabled ? 'invert(100%)' : 'none';
 	});
 
-	// Save or remove the dark mode state in sessionStorage
 	if (isDarkModeEnabled) {
 		sessionStorage.setItem("data", 'checked');
 	} else {

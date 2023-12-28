@@ -75,8 +75,12 @@ body {
 	color: black;
 }
 
+.popupPublication {
+	z-index: 999;
+}
+
 .dark-mode {
-	background-color: black;
+	background-color: rgb(20, 20, 20);
 	color: white;
 }
 
@@ -86,7 +90,10 @@ body {
 .dark-mode .dislikes_comment_post img,
 .dark-mode .comment_like_post img,
 .dark-mode .comment_dislike_post img,
-.dark-mode .delete_icon{
+.dark-mode .like_popup img,
+.dark-mode .dislike_popup img,
+.dark-mode .close_icon,
+.dark-mode .delete_icon {
 	filter: invert(100%);
 }
 

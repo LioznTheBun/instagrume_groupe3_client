@@ -65,30 +65,20 @@
 						</div>
 
 						<p>{{ publication.description }}</p>
-						<p class="date_post">
-							{% set timestamp = publication.date_publication.timestamp * 1000 %}
-							{% set differenceEnMillisecondes = "now"|date("U") * 1000 - timestamp %}
-							{% set seconds = differenceEnMillisecondes / 1000 %}
-							{% set minutes = seconds / 60 %}
-							{% set hours = minutes / 60 %}
-							{% set days = hours / 24 %}
-
-							{% if days > 0 %}
-								Publié il y a
-								{{ days|round }}
-								j
-							{% elseif hours > 0 %}
-								Publié il y a
-								{{ hours|round }}
-								h
-							{% elseif minutes > 0 %}
-								Publié il y a
-								{{ minutes|round }}
-								minute(s)
-							{% else %}
-								il y a quelques instants
-							{% endif %}
-						</p>
+							<p class="date_post">
+								{% set timestamp = publication.date_publication.timestamp %}
+								{% set difference = "now"|date("U") - timestamp %}
+								
+								{% if difference > 86400 %}
+									Publié il y a {{ (difference / 86400)|round }} j
+								{% elseif difference > 3600 %}
+									Publié il y a {{ (difference / 3600)|round }} h
+								{% elseif difference > 60 %}
+									Publié il y a {{ (difference / 60)|round }} minute(s)
+								{% else %}
+									il y a quelques instants
+								{% endif %}
+							</p>
 
 						<form class="editForm" id="editForm{{ publication.id }}" action="{{ path('edit_publication') }}" method="post" style="display: none;">
 							<label for="editDescription">Nouvelle description :</label>

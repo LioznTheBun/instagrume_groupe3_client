@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/search_bar_mur.css') }}" type="text/css">
+{% endblock %}
+
+{% block body %}
+    <main class="mur_user_search_bar">
+    {% if matchingUsers is defined and matchingUsers|length > 0 %}
+        <ul class="matching-users-list">
+            {% for user in matchingUsers %}
+                <li>
+                    <a href="{{ path('user_mur', {'pseudo': user.pseudo}) }}">
+                        {{ user.pseudo }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-matching-users">Aucun utilisateur trouvé.</p>
+    {% endif %}
+</main>
+{% endblock %}

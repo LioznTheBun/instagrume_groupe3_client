@@ -125,14 +125,23 @@ button {
     .content_profil {
         display: flex;
         flex-direction: column;
+        gap: 0;
+        text-align: center;
+        margin-left: -100px;
     }
 
     .right_content_profil {
         margin-left: -100px;
     }
-
+    .publications_profil {
+        margin-left: -102px;
+    }
     .publications_title {
         width: fit-content;
         text-align: center;
+    }
+    .img_post_profil img {
+        width: 300px;
+        height: 300px;
     }
 }

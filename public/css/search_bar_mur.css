@@ -1,0 +1,56 @@
+
+.mur_user_search_bar {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.user-details {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.pseudo_mur_search {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.user-avatar img {
+    border-radius: 50%;
+    max-width: 150px;
+    max-height: 150px;
+}
+
+.publication-item {
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+.publication-photo img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+.publication-description {
+    margin-top: 10px;
+}
+
+.commentaires-section {
+    margin-top: 10px;
+}
+
+.commentaire-list {
+    list-style: none;
+    padding: 0;
+}
+
+.commentaire-item {
+    margin-top: 10px;
+}
+
+.commentaire-auteur {
+    font-weight: bold;
+}
+
+.commentaire-contenu {
+    margin-top: 5px;
+}

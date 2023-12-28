@@ -317,6 +317,20 @@ class PageController extends AbstractController
         return $this->render('accueil.html.twig', ['page' => 'accueil', 'posts' => $arrayPosts]);
     }
 
+    #[Route('/profil/search', methods: ['GET'], name: 'search_profil_by_pseudo')]
+    public function searchProfilByPseudo(Request $request)
+    {
+        $pseudo = $request->query->get('pseudo');
+
+        $session = $request->getSession();
+        $token = $session->get('token-session');
+
+        $response = $this->apiLinker->getData('/utilisateurs/' . $pseudo, $token);
+        $userDetails = json_decode($response);
+
+        return $this->render('search_bar_mur.html.twig', ['page' => 'detailsUser', 'userDetails' => $userDetails]);
+    }
+
     #[Route('/users', methods: ['GET'], condition: "service('route_checker').checkAdmin(request)")]
     public function displayUtilisateursPage(Request $request)
     {

@@ -92,8 +92,9 @@ body {
 .dark-mode .comment_dislike_post img,
 .dark-mode .like_popup img,
 .dark-mode .dislike_popup img,
+.dark-mode .delete_icon_div img,
 .dark-mode .close_icon,
-.dark-mode .delete_icon {
+.dark-mode .delete_icon__post_div img {
 	filter: invert(100%);
 }
 

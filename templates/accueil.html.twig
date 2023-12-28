@@ -76,11 +76,17 @@
 							{% set days = hours / 24 %}
 
 							{% if days >= 1 %}
-								● {{ days|round }} j
+								●
+								{{ days|round }}
+								j
 							{% elseif hours >= 1 %}
-								● {{ hours|round }} h
+								●
+								{{ hours|round }}
+								h
 							{% elseif minutes >= 1 %}
-								● {{ minutes|round }} min
+								●
+								{{ minutes|round }}
+								min
 							{% else %}
 								il y a quelques instants
 							{% endif %}
@@ -88,7 +94,8 @@
 						{% if app.session.get('role') == 'admin' %}
 							<div class="delete_icon_post">
 								<div class="delete_icon__post_div">
-									<img class="delete_icon" src="{{ asset('images/corbeille.png') }}" onclick="deletePublication('{{ post.id }}', '{{ path('delete_publication', {'id': post.id}) }}')">								</div>
+									<img class="delete_icon" src="{{ asset('images/corbeille.png') }}" onclick="deletePublication('{{ post.id }}', '{{ path('delete_publication', {'id': post.id}) }}')">
+								</div>
 							</div>
 							{% if post.is_locked %}
 								<label class="toggle">
@@ -108,16 +115,19 @@
 					</div>
 					<div class="post-footer">
 						<div class="likes_dislikes_section">
-							<div class="likes_comment_post"><img class="" src="{{ asset('images/like.png') }}"></img>
-						</div>
-						<p>{{ post.rating_publication.likes_count }}</p>
-						<div class="dislikes_comment_post"><img class="" src="{{ asset('images/dislike.png') }}"></img>
-					</div>
-					<p>{{ post.rating_publication.dislikes_count }}</p>
-				</div>
-				<div class="post-body">
-					<section class="description post-text">{{ post.description }}</section>
-				</div>
+							<div class="comment_like_post likes_comment_post">
+								<img class="" {% if app.session.get('isUserConnected') %} onclick="toggleLikePost({{ post.rating_publication.id }}, 'like')" {% endif %} src="{{ asset('images/like.png') }}" alt="Like">
+							</div>
+							<p id="likesCount_{{ post.rating_publication.id }}">{{ post.rating_publication.likes_count }}</p>
+
+							<div class="comment_dislike_post dislikes_comment_post">
+								<img class="" {% if app.session.get('isUserConnected') %} onclick="toggleDislikePost({{ post.rating_publication.id }}, 'dislike')" {% endif %} src="{{ asset('images/dislike.png') }}" alt="Dislike">
+							</div>
+							<p id="dislikesCount_{{ post.rating_publication.id }}">{{ post.rating_publication.dislikes_count }}</p>
+			</div>
+			<div class="post-body">
+				<section class="description post-text">{{ post.description }}</section>
+			</div>
 
 				<button class="buttonShowPost" onclick="showPublication('{{ post.id }}')">
 					<p class="more_infos mobile_format">Afficher tous les commentaires...</p>
@@ -144,40 +154,40 @@
 								{% set hours = minutes / 60 %}
 								{% set days = hours / 24 %}
 
-								{% if days > 0 %}
-									{{ days|round }}
-									j
-								{% elseif hours > 0 %}
-									{{ hours|round }}
-									h
-								{% elseif minutes > 0 %}
-									{{ minutes|round }}
-									minute(s)
-								{% else %}
-									il y a quelques instants
-								{% endif %}
-							</p>
-							<div class="like_dislike_post">
-								{% if commentaire.rating_commentaire is not null %}
-									<div class="comment_like_post">
-										<img class="" src="{{ asset('images/like.png') }}">
-									</div>
-									<p>{{ commentaire.rating_commentaire.likes_count }}</p>
-									<div class="comment_dislike_post">
-										<img class="" src="{{ asset('images/dislike.png') }}">
-									</div>
-									<p>{{ commentaire.rating_commentaire.dislikes_count }}</p>
-								{% endif %}
-							</div>
-							{% if app.session.get('idUser') == commentaire.auteur.id %}
-								<div class="delete_icon_popup" onclick="deleteComm('{{ commentaire.id }}', '{{ path('delete_comment', {'id': commentaire.id}) }}')">
-									<img class="img_delete_popup" src="images/corbeille.png">
-								</div>
-								<div class="edit_icon_popup" onclick="toggleEditCommentAccueilForm('{{ commentaire.id }}')">
-									<img class="img_edit_popup" src="images/editer.png">
-								</div>
+							{% if days > 0 %}
+								{{ days|round }}
+								j
+							{% elseif hours > 0 %}
+								{{ hours|round }}
+								h
+							{% elseif minutes > 0 %}
+								{{ minutes|round }}
+								minute(s)
+							{% else %}
+								il y a quelques instants
 							{% endif %}
-							{% if app.session.get('role') == 'admin' %}
+						</p>
+						<div class="like_dislike_post">
+							{% if commentaire.rating_commentaire is not null %}
+								<div class="comment_like_post">
+									<img class="" {% if app.session.get('isUserConnected') %} onclick="toggleLikeCom({{ commentaire.rating_commentaire.id }}, 'like')" {% endif %} src="{{ asset('images/like.png') }}">
+								</div>
+								<p id="likesComCount_{{ commentaire.rating_commentaire.id }}">{{ commentaire.rating_commentaire.likes_count }}</p>
+								<div class="comment_dislike_post">
+									<img class="" {% if app.session.get('isUserConnected') %} onclick="toggleDislikeCom({{ commentaire.rating_commentaire.id }}, 'dislike')" {% endif %} src="{{ asset('images/dislike.png') }}">
+								</div>
+								<p id="dislikesComCount_{{ commentaire.rating_commentaire.id }}">{{ commentaire.rating_commentaire.dislikes_count }}</p>
+							{% endif %}
+						</div>
+						{% if app.session.get('idUser') == commentaire.auteur.id %}
+							<div class="delete_icon_popup" onclick="deleteComm('{{ commentaire.id }}', '{{ path('delete_comment', {'id': commentaire.id}) }}')">
+								<img class="img_delete_popup" src="images/corbeille.png">
+							</div>
+							<div class="edit_icon_popup" onclick="toggleEditCommentAccueilForm('{{ commentaire.id }}')">
+								<img class="img_edit_popup" src="images/editer.png">
+							</div>
+						{% endif %}
+						{% if app.session.get('role') == 'admin' %}
 							<div class="delete_icon">
 								<div class="delete_icon_div">
 									<img class="delete_icon" src="{{ asset('images/corbeille.png') }}" onclick="deleteComm('{{ commentaire.id }}', '{{ path('delete_comment', {'id': commentaire.id}) }}')">

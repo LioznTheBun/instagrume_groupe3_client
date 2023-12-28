@@ -92,7 +92,7 @@ function showPublication(postId) {
                     commentairesHtml += '<div class="post_body_popup">';
                     commentairesHtml += '<p class="pseudo_comment_popup">' + commentaire.auteur.pseudo + '</p>';
 
-                    
+
                     commentairesHtml += '<p class="comment_popup">' + commentaire.contenu + '</p>';
                     commentairesHtml += '<p class="date_comment_popup">' + formatCommentDate(commentaire.date_comm.timestamp * 1000) + '</p>';
 
@@ -109,7 +109,7 @@ function showPublication(postId) {
                         commentairesHtml += '<div class="delete_icon_popup" onclick="deleteComment(\'' + commentaire.id + '\')">';
                         commentairesHtml += '<img class="img_delete_popup" src="images/corbeille.png">';
                         commentairesHtml += '</div>';
-                    
+
                         commentairesHtml += '<div class="edit_icon_popup" onclick="toggleEditCommentForm(\'' + commentaire.id + '\')">';
                         commentairesHtml += '<img class="img_edit_popup" src="images/editer.png">';
                         commentairesHtml += '</div>';
@@ -118,9 +118,9 @@ function showPublication(postId) {
                     commentairesHtml += '<div class="button_answer_popup">';
                     commentairesHtml += '<button class="reply-button" onclick="toggleReplyForm(\'' + commentaire.id + '\', event)">Répondre</button>';
                     commentairesHtml += '</div>';
-                
 
-                    
+
+
                     commentairesHtml += '</div></div>';
                     commentairesHtml += '<div class="edit-form" style="display: none;" id="edit-form-popup-' + commentaire.id + '">';
                     commentairesHtml += '<form method="POST" action="/selfCommentaires/' + commentaire.id + '" class="form_popup_comm">';
@@ -142,7 +142,7 @@ function showPublication(postId) {
                     commentairesHtml += '</div>';
                 }
                 document.querySelector('.commentaires_popup').innerHTML = commentairesHtml;
-                
+
                 popup.style.display = 'block';
             } else {
                 console.log('Status error: ' + ajaxRequest.status);
@@ -244,18 +244,18 @@ function deleteComment(commentId) {
                 'Content-Type': 'application/json',
             },
         })
-        .then(response => {
-            if (response.ok) {
-                window.location.reload();       
-            } else {
-                console.error('Échec de la suppression du commentaire');
-                window.location.reload();       
-            }
-            window.location.reload();       
-        })
-        .catch(error => {
-            console.error('Erreur :', error);
-        });
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    console.error('Échec de la suppression du commentaire');
+                    window.location.reload();
+                }
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Erreur :', error);
+            });
     }
 }
 function deleteComm(commentId) {
@@ -268,18 +268,18 @@ function deleteComm(commentId) {
                 'Content-Type': 'application/json',
             },
         })
-        .then(response => {
-            if (response.ok) {
-                window.location.reload();       
-            } else {
-                console.error('Échec de la suppression du commentaire');
-                window.location.reload();       
-            }
-            window.location.reload();       
-        })
-        .catch(error => {
-            console.error('Erreur :', error);
-        });
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    console.error('Échec de la suppression du commentaire');
+                    window.location.reload();
+                }
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Erreur :', error);
+            });
     }
 }
 function deleteSelfComment(commentId) {
@@ -292,17 +292,17 @@ function deleteSelfComment(commentId) {
                 'Content-Type': 'application/json',
             },
         })
-        .then(response => {
-            if (response.ok) {
-                window.location.reload();            
-            } else {
-                window.location.reload();            
-            }
-            window.location.reload();        
-        })
-        .catch(error => {
-            console.error('Erreur :', error);
-        });
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    window.location.reload();
+                }
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Erreur :', error);
+            });
     }
 }
 function deletePublication(publicationId, deleteUrl) {
@@ -313,18 +313,18 @@ function deletePublication(publicationId, deleteUrl) {
                 'Content-Type': 'application/json',
             },
         })
-        .then(response => {
-            if (response.ok) {
-                window.location.reload();            
-            } else {
-                console.error('Echec de la suppression de la publication');
-            }
-            window.location.reload();
-        })
-        .catch(error => {
-            console.error('Erreur :', error);
-            window.location.reload();      
-        });
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    console.error('Echec de la suppression de la publication');
+                }
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Erreur :', error);
+                window.location.reload();
+            });
     }
 }
 
@@ -344,4 +344,80 @@ function toggleEditCommentForm(commentId) {
     } else {
         form.style.display = 'none';
     }
+}
+
+function toggleLikePost(postId, action) {
+    fetch(`/likePost/${postId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            action: action,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById(`count_${postId}`).innerText = data.count;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function toggleDislikePost(postId, action) {
+    fetch(`/dislikePost/${postId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            action: action,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById(`count_${postId}`).innerText = data.count;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function toggleLikeCom(comId, action) {
+    fetch(`/likeCom/${comId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            action: action,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById(`count_${comId}`).innerText = data.count;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function toggleDislikeCom(comId, action) {
+    fetch(`/dislikeCom/${comId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            action: action,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById(`count_${comId}`).innerText = data.count;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }

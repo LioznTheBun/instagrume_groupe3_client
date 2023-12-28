@@ -32,7 +32,7 @@ class LikeDislikeController extends AbstractController
     
         $response = $this->apiLinker->postData('/arrayRatingPost', json_encode($data), $token);
     
-        return new JsonResponse("opé reussit");
+        return new Response($response);
     }
 
     #[Route('/dislikePost/{postId}', methods: ['POST'])]
@@ -48,7 +48,7 @@ class LikeDislikeController extends AbstractController
     
         $response = $this->apiLinker->postData('/arrayRatingPost', json_encode($data), $token);
     
-        return new JsonResponse("opé reussit");
+        return new Response($response);
     }
     
     #[Route('/likeCom/{comId}', methods: ['POST'])]
@@ -64,7 +64,7 @@ class LikeDislikeController extends AbstractController
     
         $response = $this->apiLinker->postData('/arrayRatingCom', json_encode($data), $token);
     
-        return new JsonResponse("opé reussit");
+        return new Response($response);
     }
 
     #[Route('/dislikeCom/{comId}', methods: ['POST'])]
@@ -80,7 +80,7 @@ class LikeDislikeController extends AbstractController
     
         $response = $this->apiLinker->postData('/arrayRatingCom', json_encode($data), $token);
     
-        return new JsonResponse("opé reussit");
+        return new Response($response);
     }
 
 }

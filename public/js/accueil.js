@@ -87,7 +87,11 @@ function showPublication(postId) {
                 var userId = parseInt(document.getElementById('id-container').getAttribute('data-current-user'), 10);
                 for (var i = 0; i < publicationDetails.commentaires.length; i++) {
                     var commentaire = publicationDetails.commentaires[i];
-                    var isCurrentUserComment = commentaire.auteur.id === userId;
+                    if(commentaire.auteur.id === userId || sessionStorage.getItem('role') === 'admin') {
+                        var isCurrentUserComment = true;
+                    } else {
+                        var isCurrentUserComment = false;
+                    }
                     commentairesHtml += '<div class="commentaire post">';
                     commentairesHtml += '<div class="post_body_popup">';
                     commentairesHtml += '<p class="pseudo_comment_popup">' + commentaire.auteur.pseudo + '</p>';
@@ -347,6 +351,10 @@ function toggleEditCommentForm(commentId) {
 }
 
 function toggleLikePost(postId, action) {
+    const likeButton = document.getElementById(`likesPostButton_${postId}`);
+    const dislikeButton = document.getElementById(`dislikesPostButton_${postId}`);
+    const likesCountElement = document.getElementById(`likesPostCount_${postId}`);
+    const dislikesCountElement = document.getElementById(`dislikesPostCount_${postId}`);
     fetch(`/likePost/${postId}`, {
         method: 'POST',
         headers: {
@@ -358,7 +366,25 @@ function toggleLikePost(postId, action) {
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById(`count_${postId}`).innerText = data.count;
+        likesCountElement.innerText = data.likes_count;
+        dislikesCountElement.innerText = data.dislikes_count;
+
+        if (data.user_liked === true) {
+            likeButton.style.backgroundColor = 'cyan';
+            likeButton.style.filter = 'invert(0%)';
+            dislikeButton.style.removeProperty('background-color');
+            dislikeButton.style.removeProperty('filter');
+        } else if (data.user_liked === false) {
+            dislikeButton.style.backgroundColor = 'red';
+            dislikeButton.style.filter = 'invert(0%)';
+            likeButton.style.removeProperty('background-color');
+            likeButton.style.removeProperty('filter');
+        } else {
+            likeButton.style.removeProperty('background-color');
+            dislikeButton.style.removeProperty('background-color');
+            likeButton.style.removeProperty('filter');
+            dislikeButton.style.removeProperty('filter');
+        }
     })
     .catch(error => {
         console.error('Error:', error);
@@ -366,6 +392,10 @@ function toggleLikePost(postId, action) {
 }
 
 function toggleDislikePost(postId, action) {
+    const likeButton = document.getElementById(`likesPostButton_${postId}`);
+    const dislikeButton = document.getElementById(`dislikesPostButton_${postId}`);
+    const likesCountElement = document.getElementById(`likesPostCount_${postId}`);
+    const dislikesCountElement = document.getElementById(`dislikesPostCount_${postId}`);
     fetch(`/dislikePost/${postId}`, {
         method: 'POST',
         headers: {
@@ -377,7 +407,25 @@ function toggleDislikePost(postId, action) {
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById(`count_${postId}`).innerText = data.count;
+        likesCountElement.innerText = data.likes_count;
+        dislikesCountElement.innerText = data.dislikes_count;
+
+        if (data.user_liked  === true) {
+            likeButton.style.backgroundColor = 'cyan';
+            likeButton.style.filter = 'invert(0%)';
+            dislikeButton.style.removeProperty('background-color');
+            dislikeButton.style.removeProperty('filter');
+        } else if (data.user_liked === false) {
+            dislikeButton.style.backgroundColor = 'red';
+            dislikeButton.style.filter = 'invert(0%)';
+            likeButton.style.removeProperty('background-color');
+            likeButton.style.removeProperty('filter');
+        } else {
+            likeButton.style.removeProperty('background-color');
+            dislikeButton.style.removeProperty('background-color');
+            likeButton.style.removeProperty('filter');
+            dislikeButton.style.removeProperty('filter');
+        }
     })
     .catch(error => {
         console.error('Error:', error);
@@ -385,6 +433,10 @@ function toggleDislikePost(postId, action) {
 }
 
 function toggleLikeCom(comId, action) {
+    const likeButton = document.getElementById(`likesComButton_${comId}`);
+    const dislikeButton = document.getElementById(`dislikesComButton_${comId}`);
+    const likesCountElement = document.getElementById(`likesComCount_${comId}`);
+    const dislikesCountElement = document.getElementById(`dislikesComCount_${comId}`);
     fetch(`/likeCom/${comId}`, {
         method: 'POST',
         headers: {
@@ -396,7 +448,25 @@ function toggleLikeCom(comId, action) {
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById(`count_${comId}`).innerText = data.count;
+        likesCountElement.innerText = data.likes_count;
+        dislikesCountElement.innerText = data.dislikes_count;
+
+        if (data.user_liked  === true) {
+            likeButton.style.backgroundColor = 'cyan';
+            likeButton.style.filter = 'invert(0%)';
+            dislikeButton.style.removeProperty('background-color');
+            dislikeButton.style.removeProperty('filter');
+        } else if (data.user_liked === false) {
+            dislikeButton.style.backgroundColor = 'red';
+            dislikeButton.style.filter = 'invert(0%)';
+            likeButton.style.removeProperty('background-color');
+            likeButton.style.removeProperty('filter');
+        } else {
+            likeButton.style.removeProperty('background-color');
+            dislikeButton.style.removeProperty('background-color');
+            likeButton.style.removeProperty('filter');
+            dislikeButton.style.removeProperty('filter');
+        }
     })
     .catch(error => {
         console.error('Error:', error);
@@ -404,6 +474,10 @@ function toggleLikeCom(comId, action) {
 }
 
 function toggleDislikeCom(comId, action) {
+    const likeButton = document.getElementById(`likesComButton_${comId}`);
+    const dislikeButton = document.getElementById(`dislikesComButton_${comId}`);
+    const likesCountElement = document.getElementById(`likesComCount_${comId}`);
+    const dislikesCountElement = document.getElementById(`dislikesComCount_${comId}`);
     fetch(`/dislikeCom/${comId}`, {
         method: 'POST',
         headers: {
@@ -415,7 +489,25 @@ function toggleDislikeCom(comId, action) {
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById(`count_${comId}`).innerText = data.count;
+        likesCountElement.innerText = data.likes_count;
+        dislikesCountElement.innerText = data.dislikes_count;
+
+        if (data.user_liked  === true) {
+            likeButton.style.backgroundColor = 'cyan';
+            likeButton.style.filter = 'invert(0%)';
+            dislikeButton.style.removeProperty('background-color');
+            dislikeButton.style.removeProperty('filter');
+        } else if (data.user_liked === false) {
+            dislikeButton.style.backgroundColor = 'red';
+            dislikeButton.style.filter = 'invert(0%)';
+            likeButton.style.removeProperty('background-color');
+            likeButton.style.removeProperty('filter');
+        } else {
+            likeButton.style.removeProperty('background-color');
+            dislikeButton.style.removeProperty('background-color');
+            likeButton.style.removeProperty('filter');
+            dislikeButton.style.removeProperty('filter');
+        }
     })
     .catch(error => {
         console.error('Error:', error);

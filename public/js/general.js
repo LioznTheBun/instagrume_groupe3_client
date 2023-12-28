@@ -37,7 +37,10 @@ function toggleDarkMode() {
 	const replyButton = document.querySelector('.reply-button');
 	replyButton.classList.toggle('dark-mode', isDarkModeEnabled);
 
-	const tableBoutonRating= document.querySelectorAll('.likes_comment_post img, .dislikes_comment_post img, .comment_like_post img, .comment_dislike_post img, .delete_icon__post_div img, .delete_icon_div img .like_popup img, .dislike_popup img, .close_icon');
+	const card = document.querySelector('.publications_card_profil');
+	card.classList.toggle('dark-mode', isDarkModeEnabled);
+
+	const tableBoutonRating= document.querySelectorAll('.likes_comment_post img, .dislikes_comment_post img, .comment_like_post img, .comment_dislike_post img, .img_delete_popup, .img_edit_popup, .edit_icon, .delete_icon__post_div img, .delete_icon_div img .like_popup img, .dislike_popup img, .close_icon');
 	tableBoutonRating.forEach((element) => {
 		element.style.filter = isDarkModeEnabled ? 'invert(100%)' : 'none';
 	});

@@ -93,7 +93,10 @@ body {
 .dark-mode .like_popup img,
 .dark-mode .dislike_popup img,
 .dark-mode .delete_icon_div img,
+.dark-mode .img_edit_popup,
+.dark-mode .img_delete_popup,
 .dark-mode .close_icon,
+.dark-mode .edit_icon,
 .dark-mode .delete_icon__post_div img {
 	filter: invert(100%);
 }
@@ -113,8 +116,13 @@ body {
 .dark-mode .container,
 .dark-mode table,
 .dark-mode th,
-.dark-mode td {
+.dark-mode td,
+.dark-mode .publications_card_profil {
 	border-color: rgb(20, 20, 20);
 	background-color: rgb(20, 20, 20);
 	color: white;
+}
+
+.dark-mode .publications_card_profil{
+	box-shadow: 0 0 10px #FFF;
 }
